@@ -44,19 +44,19 @@ struct TestFlatOptions {
 
 void testFlat(const TestFlatOptions& opt) {
     int numVecs = opt.numVecsOverride > 0 ? opt.numVecsOverride
-                                          : faiss::gpu::randVal(1000, 5000);
+                                          : faiss::hip::randVal(1000, 5000);
     int dim = opt.dimOverride > 0 ? opt.dimOverride
-                                  : faiss::gpu::randVal(50, 800);
+                                  : faiss::hip::randVal(50, 800);
     int numQuery = opt.numQueriesOverride > 0 ? opt.numQueriesOverride
-                                              : faiss::gpu::randVal(1, 512);
+                                              : faiss::hip::randVal(1, 512);
 
     // Due to loss of precision in a float16 accumulator, for large k,
     // the number of differences is pretty huge. Restrict ourselves to a
     // fairly small `k` for float16
     int k = opt.useFloat16
-            ? std::min(faiss::gpu::randVal(1, 50), numVecs)
+            ? std::min(faiss::hip::randVal(1, 50), numVecs)
             : std::min(
-                      faiss::gpu::randVal(1, faiss::gpu::getMaxKSelection()),
+                      faiss::hip::randVal(1, faiss::hip::getMaxKSelection()),
                       numVecs);
     if (opt.kOverride > 0) {
         k = opt.kOverride;
@@ -67,20 +67,20 @@ void testFlat(const TestFlatOptions& opt) {
 
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = device;
     config.useFloat16 = opt.useFloat16;
     config.use_raft = opt.use_raft;
 
-    faiss::gpu::GpuIndexFlat gpuIndex(&res, dim, opt.metric, config);
+    faiss::hip::GpuIndexFlat gpuIndex(&res, dim, opt.metric, config);
     gpuIndex.metric_arg = opt.metricArg;
 
-    std::vector<float> vecs = faiss::gpu::randVecs(numVecs, dim);
+    std::vector<float> vecs = faiss::hip::randVecs(numVecs, dim);
     cpuIndex.add(numVecs, vecs.data());
     gpuIndex.add(numVecs, vecs.data());
 
@@ -91,7 +91,7 @@ void testFlat(const TestFlatOptions& opt) {
 
     // To some extent, we depend upon the relative error for the test
     // for float16
-    faiss::gpu::compareIndices(
+    faiss::hip::compareIndices(
             cpuIndex,
             gpuIndex,
             numQuery,
@@ -164,7 +164,7 @@ TEST(TestGpuIndexFlat, L2_Float32) {
 
 // At least one test for the k > 1024 select
 TEST(TestGpuIndexFlat, L2_k_2048) {
-    if (faiss::gpu::getMaxKSelection() >= 2048) {
+    if (faiss::hip::getMaxKSelection() >= 2048) {
         TestFlatOptions opt;
         opt.metric = faiss::MetricType::METRIC_L2;
         opt.useFloat16 = false;
@@ -262,14 +262,14 @@ TEST(TestGpuIndexFlat, L2_Tiling) {
 }
 
 TEST(TestGpuIndexFlat, QueryEmpty) {
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = 0;
     config.useFloat16 = false;
     int dim = 128;
-    faiss::gpu::GpuIndexFlatL2 gpuIndex(&res, dim, config);
+    faiss::hip::GpuIndexFlatL2 gpuIndex(&res, dim, config);
 
     // Querying an empty index should not blow up, and just return
     // (FLT_MAX, -1)
@@ -292,27 +292,27 @@ TEST(TestGpuIndexFlat, QueryEmpty) {
 }
 
 void testCopyFrom(bool use_raft) {
-    int numVecs = faiss::gpu::randVal(100, 200);
-    int dim = faiss::gpu::randVal(1, 1000);
+    int numVecs = faiss::hip::randVal(100, 200);
+    int dim = faiss::hip::randVal(1, 1000);
 
-    std::vector<float> vecs = faiss::gpu::randVecs(numVecs, dim);
+    std::vector<float> vecs = faiss::hip::randVecs(numVecs, dim);
 
     faiss::IndexFlatL2 cpuIndex(dim);
     cpuIndex.add(numVecs, vecs.data());
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
     for (bool useFloat16 : {false, true}) {
-        faiss::gpu::GpuIndexFlatConfig config;
+        faiss::hip::GpuIndexFlatConfig config;
         config.device = device;
         config.useFloat16 = useFloat16;
         config.use_raft = use_raft;
 
         // Fill with garbage values
-        faiss::gpu::GpuIndexFlatL2 gpuIndex(&res, 2000, config);
+        faiss::hip::GpuIndexFlatL2 gpuIndex(&res, 2000, config);
         gpuIndex.copyFrom(&cpuIndex);
 
         EXPECT_EQ(cpuIndex.ntotal, gpuIndex.ntotal);
@@ -330,7 +330,7 @@ void testCopyFrom(bool use_raft) {
         // The CPU is the source of (float32) truth here, while the GPU index
         // may be in float16 mode and thus was subject to rounding
         if (useFloat16) {
-            EXPECT_EQ(gpuVals, faiss::gpu::roundToHalf(cpuVals));
+            EXPECT_EQ(gpuVals, faiss::hip::roundToHalf(cpuVals));
         } else {
             // Should be exactly the same
             EXPECT_EQ(gpuVals, cpuVals);
@@ -349,22 +349,22 @@ TEST(TestRaftGpuIndexFlat, CopyFrom) {
 #endif
 
 void testCopyTo(bool use_raft) {
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    int numVecs = faiss::gpu::randVal(100, 200);
-    int dim = faiss::gpu::randVal(1, 1000);
+    int numVecs = faiss::hip::randVal(100, 200);
+    int dim = faiss::hip::randVal(1, 1000);
 
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
-    std::vector<float> vecs = faiss::gpu::randVecs(numVecs, dim);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
+    std::vector<float> vecs = faiss::hip::randVecs(numVecs, dim);
 
     for (bool useFloat16 : {false, true}) {
-        faiss::gpu::GpuIndexFlatConfig config;
+        faiss::hip::GpuIndexFlatConfig config;
         config.device = device;
         config.useFloat16 = useFloat16;
         config.use_raft = use_raft;
 
-        faiss::gpu::GpuIndexFlatL2 gpuIndex(&res, dim, config);
+        faiss::hip::GpuIndexFlatL2 gpuIndex(&res, dim, config);
         gpuIndex.add(numVecs, vecs.data());
 
         // Fill with garbage values
@@ -402,9 +402,9 @@ TEST(TestRaftGpuIndexFlat, CopyTo) {
 void testUnifiedMemory(bool use_raft) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    if (!faiss::gpu::getFullUnifiedMemSupport(device)) {
+    if (!faiss::hip::getFullUnifiedMemSupport(device)) {
         return;
     }
 
@@ -419,23 +419,23 @@ void testUnifiedMemory(bool use_raft) {
 
     faiss::IndexFlatL2 cpuIndexL2(dim);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = device;
-    config.memorySpace = faiss::gpu::MemorySpace::Unified;
+    config.memorySpace = faiss::hip::MemorySpace::Unified;
     config.use_raft = use_raft;
 
-    faiss::gpu::GpuIndexFlatL2 gpuIndexL2(&res, dim, config);
+    faiss::hip::GpuIndexFlatL2 gpuIndexL2(&res, dim, config);
 
-    std::vector<float> vecs = faiss::gpu::randVecs(numVecs, dim);
+    std::vector<float> vecs = faiss::hip::randVecs(numVecs, dim);
     cpuIndexL2.add(numVecs, vecs.data());
     gpuIndexL2.add(numVecs, vecs.data());
 
     // To some extent, we depend upon the relative error for the test
     // for float16
-    faiss::gpu::compareIndices(
+    faiss::hip::compareIndices(
             cpuIndexL2,
             gpuIndexL2,
             numQuery,
@@ -460,15 +460,15 @@ TEST(TestRaftGpuIndexFlat, UnifiedMemory) {
 void testLargeIndex(bool use_raft) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
     // Skip this device if we do not have sufficient memory
     constexpr size_t kMem = size_t(8) * 1024 * 1024 * 1024;
 
-    if (faiss::gpu::getFreeMemory(device) < kMem) {
+    if (faiss::hip::getFreeMemory(device) < kMem) {
         std::cout << "TestGpuIndexFlat.LargeIndex: skipping due "
                      "to insufficient device memory\n";
         return;
@@ -480,23 +480,23 @@ void testLargeIndex(bool use_raft) {
     size_t nb = 5000000;
     size_t nq = 10;
 
-    auto xb = faiss::gpu::randVecs(nb, dim);
+    auto xb = faiss::hip::randVecs(nb, dim);
 
     int k = 10;
 
     faiss::IndexFlatL2 cpuIndexL2(dim);
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = device;
     config.use_raft = use_raft;
-    faiss::gpu::GpuIndexFlatL2 gpuIndexL2(&res, dim, config);
+    faiss::hip::GpuIndexFlatL2 gpuIndexL2(&res, dim, config);
 
     cpuIndexL2.add(nb, xb.data());
     gpuIndexL2.add(nb, xb.data());
 
     // To some extent, we depend upon the relative error for the test
     // for float16
-    faiss::gpu::compareIndices(
+    faiss::hip::compareIndices(
             cpuIndexL2,
             gpuIndexL2,
             nq,
@@ -521,27 +521,27 @@ TEST(TestRaftGpuIndexFlat, LargeIndex) {
 void testResidual(bool use_raft) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = device;
     config.use_raft = use_raft;
 
     int dim = 32;
     faiss::IndexFlat cpuIndex(dim, faiss::MetricType::METRIC_L2);
-    faiss::gpu::GpuIndexFlat gpuIndex(
+    faiss::hip::GpuIndexFlat gpuIndex(
             &res, dim, faiss::MetricType::METRIC_L2, config);
 
     int numVecs = 100;
-    auto vecs = faiss::gpu::randVecs(numVecs, dim);
+    auto vecs = faiss::hip::randVecs(numVecs, dim);
     cpuIndex.add(numVecs, vecs.data());
     gpuIndex.add(numVecs, vecs.data());
 
     auto indexVecs = std::vector<faiss::idx_t>{0, 2, 4, 6, 8};
-    auto queryVecs = faiss::gpu::randVecs(indexVecs.size(), dim);
+    auto queryVecs = faiss::hip::randVecs(indexVecs.size(), dim);
 
     auto residualsCpu = std::vector<float>(indexVecs.size() * dim);
     auto residualsGpu = std::vector<float>(indexVecs.size() * dim);
@@ -574,23 +574,23 @@ TEST(TestRaftGpuIndexFlat, Residual) {
 void testReconstruct(bool use_raft) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
     int dim = 32;
     int numVecs = 100;
-    auto vecs = faiss::gpu::randVecs(numVecs, dim);
-    auto vecs16 = faiss::gpu::roundToHalf(vecs);
+    auto vecs = faiss::hip::randVecs(numVecs, dim);
+    auto vecs16 = faiss::hip::roundToHalf(vecs);
 
     for (bool useFloat16 : {false, true}) {
-        faiss::gpu::GpuIndexFlatConfig config;
+        faiss::hip::GpuIndexFlatConfig config;
         config.device = device;
         config.useFloat16 = useFloat16;
         config.use_raft = use_raft;
 
-        faiss::gpu::GpuIndexFlat gpuIndex(
+        faiss::hip::GpuIndexFlat gpuIndex(
                 &res, dim, faiss::MetricType::METRIC_L2, config);
 
         gpuIndex.add(numVecs, vecs.data());
@@ -665,9 +665,9 @@ TEST(TestRaftGpuIndexFlat, Reconstruct) {
 void testSearchAndReconstruct(bool use_raft) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
     size_t dim = 32;
@@ -675,15 +675,15 @@ void testSearchAndReconstruct(bool use_raft) {
     size_t nq = 10;
     int k = 10;
 
-    auto xb = faiss::gpu::randVecs(nb, dim);
-    auto xq = faiss::gpu::randVecs(nq, dim);
+    auto xb = faiss::hip::randVecs(nb, dim);
+    auto xq = faiss::hip::randVecs(nq, dim);
 
     faiss::IndexFlatL2 cpuIndex(dim);
 
-    faiss::gpu::GpuIndexFlatConfig config;
+    faiss::hip::GpuIndexFlatConfig config;
     config.device = device;
     config.use_raft = use_raft;
-    faiss::gpu::GpuIndexFlatL2 gpuIndex(&res, dim, config);
+    faiss::hip::GpuIndexFlatL2 gpuIndex(&res, dim, config);
 
     cpuIndex.add(nb, xb.data());
     gpuIndex.add(nb, xb.data());
@@ -711,7 +711,7 @@ void testSearchAndReconstruct(bool use_raft) {
             testReconstruct.data());
 
     // This handles the search results
-    faiss::gpu::compareLists(
+    faiss::hip::compareLists(
             refDistance.data(),
             refIndices.data(),
             testDistance.data(),
@@ -764,7 +764,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

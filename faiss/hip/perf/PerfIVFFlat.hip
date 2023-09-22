@@ -33,7 +33,7 @@ DEFINE_int64(seed, -1, "specify random seed");
 DEFINE_int32(num_gpus, 1, "number of gpus to use");
 DEFINE_int32(index, 2, "0 = no indices on GPU; 1 = 32 bit, 2 = 64 bit on GPU");
 
-using namespace faiss::gpu;
+using namespace faiss::hip;
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -65,15 +65,15 @@ int main(int argc, char** argv) {
     // Convert to GPU index
     printf("Copying index to %d GPU(s)...\n", FLAGS_num_gpus);
 
-    auto initFn = [&index](faiss::gpu::GpuResourcesProvider* res, int dev)
-            -> std::unique_ptr<faiss::gpu::GpuIndexIVFFlat> {
+    auto initFn = [&index](faiss::hip::GpuResourcesProvider* res, int dev)
+            -> std::unique_ptr<faiss::hip::GpuIndexIVFFlat> {
         GpuIndexIVFFlatConfig config;
         config.device = dev;
-        config.indicesOptions = (faiss::gpu::IndicesOptions)FLAGS_index;
+        config.indicesOptions = (faiss::hip::IndicesOptions)FLAGS_index;
         config.flatConfig.useFloat16 = FLAGS_use_float16_coarse;
 
-        auto p = std::unique_ptr<faiss::gpu::GpuIndexIVFFlat>(
-                new faiss::gpu::GpuIndexIVFFlat(
+        auto p = std::unique_ptr<faiss::hip::GpuIndexIVFFlat>(
+                new faiss::hip::GpuIndexIVFFlat(
                         res,
                         index->d,
                         index->nlist,
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
         return p;
     };
 
-    IndexWrapper<faiss::gpu::GpuIndexIVFFlat> gpuIndex(FLAGS_num_gpus, initFn);
+    IndexWrapper<faiss::hip::GpuIndexIVFFlat> gpuIndex(FLAGS_num_gpus, initFn);
     gpuIndex.setNumProbes(FLAGS_nprobe);
     printf("copy done\n");
 
@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
     HostTensor<faiss::idx_t, 2, true> gpuIndices({numQueries, FLAGS_k});
 
     CUDA_VERIFY(hipProfilerStart());
-    faiss::gpu::synchronizeAllDevices();
+    faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
 

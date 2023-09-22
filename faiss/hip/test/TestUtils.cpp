@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <cuda_fp16.h>
-#include <faiss/gpu/test/TestUtils.h>
+#include <hip_fp16.h>
+#include <faiss/hip/test/TestUtils.h>
 #include <faiss/utils/random.h>
 #include <gtest/gtest.h>
 #include <time.h>
@@ -16,7 +16,7 @@
 #include <unordered_map>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 inline float relativeError(float a, float b) {
     return std::abs(a - b) / (0.5f * (std::abs(a) + std::abs(b)));
@@ -114,7 +114,7 @@ void compareIndices(
             testDistance.data(),
             testIndices.data());
 
-    faiss::gpu::compareLists(
+    faiss::hip::compareLists(
             refDistance.data(),
             refIndices.data(),
             testDistance.data(),
@@ -140,7 +140,7 @@ void compareIndices(
         float maxRelativeError,
         float pctMaxDiff1,
         float pctMaxDiffN) {
-    auto queryVecs = faiss::gpu::randVecs(numQuery, dim);
+    auto queryVecs = faiss::hip::randVecs(numQuery, dim);
 
     compareIndices(
             queryVecs,
@@ -359,5 +359,5 @@ void compareLists(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

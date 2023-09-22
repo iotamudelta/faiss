@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/Limits.h>
 #include <faiss/hip/utils/MathOperators.h>
 #include <faiss/hip/utils/Pair.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct Sum {
@@ -67,5 +67,5 @@ struct SegmentedReduce {
     ReduceOp op;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

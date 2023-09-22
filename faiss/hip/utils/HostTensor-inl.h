@@ -6,7 +6,7 @@
  */
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename T,
@@ -233,5 +233,5 @@ __host__ T HostTensor<T, Dim, InnerContig, IndexT, PtrTraits>::maxDiff(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

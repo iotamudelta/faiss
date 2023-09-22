@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/WarpShuffles.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 //
 // Warp-coalesced parallel reading and writing of packed bits
@@ -277,5 +277,5 @@ struct WarpPackedBits<uint8_t, 4> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

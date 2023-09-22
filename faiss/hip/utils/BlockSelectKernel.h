@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -8,10 +9,10 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/hip/utils/Select.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename K,
@@ -162,5 +163,5 @@ void runBlockSelectPair(
         int k,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

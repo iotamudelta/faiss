@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Generates and displays a new seed for the test
 void newTestSeed();
@@ -141,5 +141,5 @@ void testIVFEquality(A& cpuIndex, B& gpuIndex) {
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

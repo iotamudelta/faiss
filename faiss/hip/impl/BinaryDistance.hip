@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,13 +7,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/Select.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Number of warps that the kernel is instantiated with
 constexpr int kWarps = 8;
@@ -202,9 +203,9 @@ void runBinaryDistanceAnySize(
     if (k == 1) {
         binaryDistanceAnySize<1, 1, BinaryType>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
-    } else if (k <= 32) {
-        binaryDistanceAnySize<32, 2, BinaryType>
-                <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+    //} else if (k <= 32) {
+    //    binaryDistanceAnySize<64, 2, BinaryType>
+    //            <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
     } else if (k <= 64) {
         binaryDistanceAnySize<64, 3, BinaryType>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
@@ -243,9 +244,9 @@ void runBinaryDistanceLimitSize(
     if (k == 1) {
         binaryDistanceLimitSize<1, 1, BinaryType, ReductionLimit>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
-    } else if (k <= 32) {
-        binaryDistanceLimitSize<32, 2, BinaryType, ReductionLimit>
-                <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+    //} else if (k <= 32) {
+    //    binaryDistanceLimitSize<64, 2, BinaryType, ReductionLimit>
+    //            <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
     } else if (k <= 64) {
         binaryDistanceLimitSize<64, 3, BinaryType, ReductionLimit>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
@@ -313,5 +314,5 @@ void runBinaryDistance(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

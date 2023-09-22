@@ -57,3 +57,7 @@ target_link_libraries(example_c PRIVATE faiss_c)
 if(FAISS_ENABLE_GPU)
   add_subdirectory(gpu)
 endif()
+
+if(FAISS_ENABLE_HIP)
+  add_subdirectory(hip)
+endif()

@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <hipblas.h>
+#include <hipblas/hipblas.h>
 #include <faiss/Index.h>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/NoTypeTensor.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class DeviceMemory;
 
@@ -34,7 +34,7 @@ void runPQCodeDistances(
         bool l2Distance,
         bool useFloat16Lookup);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/impl/PQCodeDistances-inl.cuh>
+#include <faiss/hip/impl/PQCodeDistances-inl.h>

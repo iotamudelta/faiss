@@ -5,25 +5,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/RemapIndices.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/RemapIndices.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/invlists/InvertedLists.h>
 #include <thrust/host_vector.h>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/IVFAppend.cuh>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/ThrustUtils.cuh>
+#include <faiss/hip/impl/FlatIndex.h>
+#include <faiss/hip/impl/IVFAppend.h>
+#include <faiss/hip/impl/IVFBase.h>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/ThrustUtils.h>
 #include <limits>
 #include <unordered_map>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 IVFBase::DeviceIVFList::DeviceIVFList(GpuResources* res, const AllocInfo& info)
         : data(res, info), numVecs(0) {}
@@ -829,5 +829,5 @@ idx_t IVFBase::addVectors(
     return numAdded;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

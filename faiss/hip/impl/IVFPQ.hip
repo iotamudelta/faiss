@@ -5,34 +5,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/InterleavedCodes.h>
-#include <faiss/gpu/impl/RemapIndices.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/InterleavedCodes.h>
+#include <faiss/hip/impl/RemapIndices.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <thrust/host_vector.h>
-#include <faiss/gpu/impl/BroadcastSum.cuh>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/IVFAppend.cuh>
-#include <faiss/gpu/impl/IVFPQ.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/impl/PQCodeDistances.cuh>
-#include <faiss/gpu/impl/PQScanMultiPassNoPrecomputed.cuh>
-#include <faiss/gpu/impl/PQScanMultiPassPrecomputed.cuh>
-#include <faiss/gpu/impl/VectorResidual.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/hip/impl/BroadcastSum.h>
+#include <faiss/hip/impl/Distance.h>
+#include <faiss/hip/impl/FlatIndex.h>
+#include <faiss/hip/impl/IVFAppend.h>
+#include <faiss/hip/impl/IVFPQ.h>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/impl/PQCodeDistances.h>
+#include <faiss/hip/impl/PQScanMultiPassNoPrecomputed.h>
+#include <faiss/hip/impl/PQScanMultiPassPrecomputed.h>
+#include <faiss/hip/impl/VectorResidual.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/MatrixMult.h>
+#include <faiss/hip/utils/NoTypeTensor.h>
+#include <faiss/hip/utils/Transpose.h>
 #include <limits>
 #include <type_traits>
 #include <unordered_map>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 IVFPQ::IVFPQ(
         GpuResources* resources,
@@ -733,5 +733,5 @@ void IVFPQ::runPQNoPrecomputedCodes_(
             resources_);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

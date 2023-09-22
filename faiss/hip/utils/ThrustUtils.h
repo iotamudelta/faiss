@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
-#include <faiss/gpu/GpuResources.h>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/GpuResources.h>
 #include <thrust/device_vector.h>
 #include <unordered_set>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Allocator for Thrust that comes out of a specified memory space
 class ThrustAllocator {
@@ -78,5 +78,5 @@ class ThrustAllocator {
     std::unordered_set<char*> mallocAllocs_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

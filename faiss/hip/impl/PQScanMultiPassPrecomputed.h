@@ -8,13 +8,13 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/utils/DeviceVector.h>
+#include <faiss/hip/utils/NoTypeTensor.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -41,5 +41,5 @@ void runPQScanMultiPassPrecomputed(
         Tensor<idx_t, 2, true>& outIndices,
         GpuResources* res);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

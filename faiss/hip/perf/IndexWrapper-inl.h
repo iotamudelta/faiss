@@ -8,16 +8,16 @@
 #include <faiss/impl/FaissAssert.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename GpuIndex>
 IndexWrapper<GpuIndex>::IndexWrapper(
         int numGpus,
         std::function<std::unique_ptr<GpuIndex>(GpuResourcesProvider*, int)>
                 init) {
-    FAISS_ASSERT(numGpus <= faiss::gpu::getNumDevices());
+    FAISS_ASSERT(numGpus <= faiss::hip::getNumDevices());
     for (int i = 0; i < numGpus; ++i) {
-        auto res = std::unique_ptr<faiss::gpu::StandardGpuResources>(
+        auto res = std::unique_ptr<faiss::hip::StandardGpuResources>(
                 new StandardGpuResources);
 
         subIndex.emplace_back(init(res.get(), i));
@@ -62,5 +62,5 @@ void IndexWrapper<GpuIndex>::setNumProbes(size_t nprobe) {
     runOnIndices([nprobe](GpuIndex* index) { index->nprobe = nprobe; });
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

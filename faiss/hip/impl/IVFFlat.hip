@@ -5,28 +5,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/InterleavedCodes.h>
-#include <faiss/gpu/impl/RemapIndices.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/InterleavedCodes.h>
+#include <faiss/hip/impl/RemapIndices.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <thrust/host_vector.h>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/IVFAppend.cuh>
-#include <faiss/gpu/impl/IVFFlat.cuh>
-#include <faiss/gpu/impl/IVFFlatScan.cuh>
-#include <faiss/gpu/impl/IVFInterleaved.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/hip/impl/FlatIndex.h>
+#include <faiss/hip/impl/IVFAppend.h>
+#include <faiss/hip/impl/IVFFlat.h>
+#include <faiss/hip/impl/IVFFlatScan.h>
+#include <faiss/hip/impl/IVFInterleaved.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/Transpose.h>
 #include <limits>
 #include <unordered_map>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 IVFFlat::IVFFlat(
         GpuResources* res,
@@ -351,5 +351,5 @@ void IVFFlat::searchImpl_(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

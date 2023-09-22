@@ -27,7 +27,7 @@
 #include <raft/distance/distance_types.hpp>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 inline raft::distance::DistanceType faiss_to_raft(
         MetricType metric,
@@ -54,5 +54,5 @@ inline raft::distance::DistanceType faiss_to_raft(
             RAFT_FAIL("Distance type not supported");
     }
 }
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

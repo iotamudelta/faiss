@@ -9,9 +9,9 @@
 
 #include <faiss/Index.h>
 #include <faiss/MetricType.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/DeviceVector.h>
 #include <memory>
 #include <vector>
 
@@ -20,7 +20,7 @@ struct InvertedLists;
 }
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 class FlatIndex;
@@ -266,5 +266,5 @@ class IVFBase {
     std::vector<std::vector<idx_t>> listOffsetToUserIndex_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

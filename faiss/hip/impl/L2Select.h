@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 void runL2SelectMin(
         Tensor<float, 2, true>& productDistances,

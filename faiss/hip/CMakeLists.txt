@@ -176,7 +176,7 @@ set(FAISS_HIP_HEADERS
   utils/warpselect/WarpSelectImpl.h
 )
 
-# Export FAISS_GPU_HEADERS variable to parent scope.
+# Export FAISS_HIP_HEADERS variable to parent scope.
 set(FAISS_HIP_HEADERS ${FAISS_HIP_HEADERS} PARENT_SCOPE)
 
 target_sources(faiss PRIVATE ${FAISS_HIP_SRC})
@@ -189,10 +189,12 @@ foreach(header ${FAISS_HIP_HEADERS})
   )
 endforeach()
 
+link_directories(/opt/rocm/lib/)
+include_directories(/opt/rocm/include/)
 find_package(hip REQUIRED)
 find_package(hsa-runtime64 REQUIRED)
 find_package(hipblas REQUIRED)
-target_link_libraries(faiss PRIVATE hip::amdhip64 hipblas)
-target_link_libraries(faiss_avx2 PRIVATE hip::amdhip64 hipblas)
+target_link_libraries(faiss PRIVATE hip::amdhip64 ${HIPBLAS_LIBRARIES})
+target_link_libraries(faiss_avx2 PRIVATE hip::amdhip64 ${HIPBLAS_LIBRARIES})
 target_compile_options(faiss PRIVATE)
 target_compile_options(faiss_avx2 PRIVATE)

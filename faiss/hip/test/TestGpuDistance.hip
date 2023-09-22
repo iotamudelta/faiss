@@ -21,19 +21,19 @@
  */
 
 #include <faiss/IndexFlat.h>
-#include <faiss/gpu/GpuDistance.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuDistance.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <gtest/gtest.h>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/Transpose.h>
 #include <sstream>
 #include <vector>
 
 void evaluate_bfknn(
-        faiss::gpu::GpuDistanceParams& args,
-        faiss::gpu::GpuResourcesProvider* res,
+        faiss::hip::GpuDistanceParams& args,
+        faiss::hip::GpuResourcesProvider* res,
         std::vector<float>& cpuDistance,
         std::vector<faiss::idx_t>& cpuIndices,
         std::vector<float>& gpuDistance,
@@ -43,7 +43,7 @@ void evaluate_bfknn(
         bool colMajorVecs,
         bool colMajorQueries,
         faiss::MetricType metric) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     bfKnn(res, args);
 
@@ -74,7 +74,7 @@ void testTransposition(
         faiss::MetricType metric,
         bool use_raft = false,
         float metricArg = 0) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     int device = randVal(0, getNumDevices() - 1);
 
@@ -331,7 +331,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceTensor.cuh>
+#include <faiss/hip/utils/DeviceTensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Performs brute-force k-NN comparison between `vecs` and `query`, where they
 // are encoded as binary vectors
@@ -20,5 +20,5 @@ void runBinaryDistance(
         int k,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

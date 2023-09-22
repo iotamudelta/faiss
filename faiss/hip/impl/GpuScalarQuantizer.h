@@ -8,14 +8,14 @@
 #pragma once
 
 #include <faiss/IndexScalarQuantizer.h>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/WarpShuffles.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 inline bool isSQSupported(ScalarQuantizer::QuantizerType qtype) {
     switch (qtype) {
@@ -848,5 +848,5 @@ struct Codec<ScalarQuantizer::QuantizerType::QT_4bit, 1> {
     float* smemVdiff;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

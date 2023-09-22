@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/PtxUtils.cuh>
+#include <faiss/hip/utils/PtxUtils.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 #if __CUDA_ARCH__ >= 350
 // Use the CC 3.5+ read-only texture cache (nc)
@@ -384,5 +384,5 @@ struct LoadCode32<96> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

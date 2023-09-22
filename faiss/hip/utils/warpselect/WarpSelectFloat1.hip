@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/warpselect/WarpSelectImpl.cuh>
+#include <faiss/hip/utils/warpselect/WarpSelectImpl.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 WARP_SELECT_IMPL(float, true, 1, 1);
 WARP_SELECT_IMPL(float, false, 1, 1);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

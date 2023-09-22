@@ -9,11 +9,11 @@
 
 #include <faiss/Index.h>
 #include <faiss/MetricType.h>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/hip/impl/IVFBase.h>
+#include <faiss/hip/utils/Float16.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Implementing class for IVFPQ on the GPU
 class IVFPQ : public IVFBase {
@@ -177,5 +177,5 @@ class IVFPQ : public IVFBase {
     DeviceTensor<half, 3, true> precomputedCodeHalf_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

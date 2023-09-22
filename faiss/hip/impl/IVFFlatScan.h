@@ -9,13 +9,13 @@
 
 #include <faiss/Index.h>
 #include <faiss/MetricType.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/impl/GpuScalarQuantizer.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/impl/GpuScalarQuantizer.h>
+#include <faiss/hip/utils/DeviceVector.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -38,5 +38,5 @@ void runIVFFlatScan(
         Tensor<idx_t, 2, true>& outIndices,
         GpuResources* res);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

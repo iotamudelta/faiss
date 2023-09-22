@@ -12,7 +12,7 @@
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResourcesProvider;
 struct IcmEncoderShards;
@@ -56,5 +56,5 @@ struct GpuIcmEncoderFactory : public lsq::IcmEncoderFactory {
     std::vector<int> devices;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

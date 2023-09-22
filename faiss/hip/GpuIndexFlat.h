@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <faiss/gpu/GpuIndex.h>
+#include <faiss/hip/GpuIndex.h>
 #include <memory>
 
 namespace faiss {
@@ -19,7 +19,7 @@ struct IndexFlatIP;
 } // namespace faiss
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class FlatIndex;
 
@@ -213,5 +213,5 @@ class GpuIndexFlatIP : public GpuIndexFlat {
     void copyTo(faiss::IndexFlat* index);
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -34,7 +34,7 @@ DEFINE_int64(seed, -1, "specify random seed");
 DEFINE_int32(num_gpus, 1, "number of gpus to use");
 DEFINE_int32(index, 2, "0 = no indices on GPU; 1 = 32 bit, 2 = 64 bit on GPU");
 
-using namespace faiss::gpu;
+using namespace faiss::hip;
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -74,26 +74,26 @@ int main(int argc, char** argv) {
     printf("Copying index to %d GPU(s)...\n", FLAGS_num_gpus);
 
     auto precomp = FLAGS_use_precomputed;
-    auto indicesOpt = (faiss::gpu::IndicesOptions)FLAGS_index;
+    auto indicesOpt = (faiss::hip::IndicesOptions)FLAGS_index;
     auto useFloat16Lookup = FLAGS_float16_lookup;
 
     auto initFn =
             [precomp, indicesOpt, useFloat16Lookup, &index](
-                    faiss::gpu::GpuResourcesProvider* res,
-                    int dev) -> std::unique_ptr<faiss::gpu::GpuIndexIVFPQ> {
-        faiss::gpu::GpuIndexIVFPQConfig config;
+                    faiss::hip::GpuResourcesProvider* res,
+                    int dev) -> std::unique_ptr<faiss::hip::GpuIndexIVFPQ> {
+        faiss::hip::GpuIndexIVFPQConfig config;
         config.device = dev;
         config.usePrecomputedTables = precomp;
         config.indicesOptions = indicesOpt;
         config.useFloat16LookupTables = useFloat16Lookup;
 
-        auto p = std::unique_ptr<faiss::gpu::GpuIndexIVFPQ>(
-                new faiss::gpu::GpuIndexIVFPQ(res, index.get(), config));
+        auto p = std::unique_ptr<faiss::hip::GpuIndexIVFPQ>(
+                new faiss::hip::GpuIndexIVFPQ(res, index.get(), config));
 
         return p;
     };
 
-    IndexWrapper<faiss::gpu::GpuIndexIVFPQ> gpuIndex(FLAGS_num_gpus, initFn);
+    IndexWrapper<faiss::hip::GpuIndexIVFPQ> gpuIndex(FLAGS_num_gpus, initFn);
     gpuIndex.setNumProbes(FLAGS_nprobe);
     printf("copy done\n");
 
@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
     HostTensor<faiss::idx_t, 2, true> gpuIndices({numQueries, FLAGS_k});
 
     CUDA_VERIFY(hipProfilerStart());
-    faiss::gpu::synchronizeAllDevices();
+    faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
 

@@ -8,14 +8,14 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/utils/DeviceVector.h>
+#include <faiss/hip/utils/Tensor.h>
 
 // A collection of utility functions for IVFPQ and IVFFlat, for
 // post-processing and k-selecting the results
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -57,5 +57,5 @@ void runPass2SelectLists(
         Tensor<idx_t, 2, true>& outIndices,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

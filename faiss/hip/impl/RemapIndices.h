@@ -11,7 +11,7 @@
 #include <vector>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Utility function to translate (list id, offset) to a user index on
 /// the CPU. In a cpp in order to use OpenMP.
@@ -22,5 +22,5 @@ void ivfOffsetToUserIndex(
         int k,
         const std::vector<std::vector<idx_t>>& listOffsetToUserIndex);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -5,16 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuIcmEncoder.h>
+#include <faiss/hip/GpuIcmEncoder.h>
 
-#include <faiss/gpu/StandardGpuResources.h>
+#include <faiss/hip/StandardGpuResources.h>
 #include <faiss/utils/WorkerThread.h>
-#include <faiss/gpu/impl/IcmEncoder.cuh>
+#include <faiss/hip/impl/IcmEncoder.h>
 
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 ///< A helper structure to support multi-GPU
 struct IcmEncoderShards {
@@ -116,5 +116,5 @@ lsq::IcmEncoder* GpuIcmEncoderFactory::get(const LocalSearchQuantizer* lsq) {
     return new GpuIcmEncoder(lsq, provs, devices);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

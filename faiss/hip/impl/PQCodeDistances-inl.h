@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,20 +7,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/BroadcastSum.cuh>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/impl/BroadcastSum.h>
+#include <faiss/hip/impl/Distance.h>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/MatrixMult.h>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/Transpose.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Kernel responsible for calculating distance from residual vector to
 // each product quantizer code centroid
@@ -731,5 +732,5 @@ void runPQCodeDistances(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

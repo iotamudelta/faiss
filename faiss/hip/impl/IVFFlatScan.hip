@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,25 +7,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/impl/IVFFlatScan.cuh>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/utils/Comparators.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/impl/DistanceUtils.h>
+#include <faiss/hip/impl/IVFFlatScan.h>
+#include <faiss/hip/impl/IVFUtils.h>
+#include <faiss/hip/utils/Comparators.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/Reductions.h>
 
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 namespace {
 
@@ -508,5 +509,5 @@ void runIVFFlatScan(
     streamWait({stream}, streams);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

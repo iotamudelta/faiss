@@ -8,10 +8,10 @@
 #pragma once
 
 #include <faiss/Index.h> // idx_t
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename T,
@@ -88,7 +88,7 @@ class HostTensor : public Tensor<T, Dim, InnerContig, IndexT, PtrTraits> {
     AllocState state_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/utils/HostTensor-inl.cuh>
+#include <faiss/hip/utils/HostTensor-inl.h>

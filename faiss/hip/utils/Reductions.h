@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/hip/utils/DeviceDefs.h>
 #include <faiss/hip/utils/PtxUtils.h>
@@ -15,7 +15,7 @@
 #include <faiss/hip/utils/WarpShuffles.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T, typename Op, int ReduceWidth = kWarpSize>
 __device__ inline T warpReduceAll(T val, Op op) {
@@ -143,5 +143,5 @@ __device__ inline void blockReduceAllSum(T vals[Num], T* smem) {
             vals, Sum<T>(), smem);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

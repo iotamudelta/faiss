@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/utils/WarpShuffles.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// A simple pair type for CUDA device usage
 template <typename K, typename V>
@@ -62,5 +62,5 @@ inline __device__ Pair<T, U> shfl_xor(
             shfl_xor(pair.v, laneMask, width));
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

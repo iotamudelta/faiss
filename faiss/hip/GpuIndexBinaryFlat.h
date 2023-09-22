@@ -8,12 +8,12 @@
 #pragma once
 
 #include <faiss/IndexBinaryFlat.h>
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuResources.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuResources.h>
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class BinaryFlatIndex;
 
@@ -96,5 +96,5 @@ class GpuIndexBinaryFlat : public IndexBinary {
     std::unique_ptr<BinaryFlatIndex> data_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

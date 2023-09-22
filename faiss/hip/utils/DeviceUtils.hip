@@ -13,7 +13,7 @@
 #include <unordered_map>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 int getCurrentDevice() {
     int dev = -1;
@@ -242,5 +242,5 @@ void CudaEvent::cpuWaitOnEvent() {
     CUDA_VERIFY(hipEventSynchronize(event_));
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

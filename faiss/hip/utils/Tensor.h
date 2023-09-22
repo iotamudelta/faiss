@@ -8,8 +8,8 @@
 #pragma once
 
 #include <assert.h>
-#include <hip/hip_runtime.h>
-#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/Index.h> // idx_t
 #include <stdint.h>
 #include <initializer_list>
@@ -20,7 +20,7 @@
 /// library cutorch as well.
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Our tensor type
 template <
@@ -693,7 +693,7 @@ Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::operator[](IndexT index) const {
                     const_cast<TensorType&>(*this), data_)[index]);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/utils/Tensor-inl.cuh>
+#include <faiss/hip/utils/Tensor-inl.h>

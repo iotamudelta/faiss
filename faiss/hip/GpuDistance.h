@@ -10,7 +10,7 @@
 #include <faiss/Index.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResourcesProvider;
 
@@ -109,7 +109,7 @@ struct GpuDistanceParams {
     bool use_raft = false;
 };
 
-/// A wrapper for gpu/impl/Distance.cuh to expose direct brute-force k-nearest
+/// A wrapper for gpu/impl/Distance.h to expose direct brute-force k-nearest
 /// neighbor searches on an externally-provided region of memory (e.g., from a
 /// pytorch tensor).
 /// The data (vectors, queries, outDistances, outIndices) can be resident on the
@@ -166,5 +166,5 @@ void bruteForceKnn(
         // innermost (row major)
         idx_t* outIndices);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -11,7 +11,7 @@
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename T,
@@ -1048,5 +1048,5 @@ __host__ __device__ Tensor<T, NewDim, InnerContig, IndexT, PtrTraits> Tensor<
     return Tensor<T, NewDim, true, IndexT, PtrTraits>(data(), sizes);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -5,17 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <gflags/gflags.h>
 #include <gtest/gtest.h>
 #include <algorithm>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/WarpSelectKernel.cuh>
+#include <faiss/hip/utils/BlockSelectKernel.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/WarpSelectKernel.h>
 #include <sstream>
 #include <unordered_map>
 #include <vector>
@@ -29,7 +29,7 @@ DEFINE_int32(iter, 5, "iterations to run");
 DEFINE_bool(k_powers, false, "test k powers of 2 from 1 -> max k");
 
 int main(int argc, char** argv) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 

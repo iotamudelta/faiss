@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/RemapIndices.h>
+#include <faiss/hip/impl/RemapIndices.h>
 #include <faiss/impl/FaissAssert.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Utility function to translate (list id, offset) to a user index on
 // the CPU. In a cpp in order to use OpenMP
@@ -43,5 +43,5 @@ void ivfOffsetToUserIndex(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

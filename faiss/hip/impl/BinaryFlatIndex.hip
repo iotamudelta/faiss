@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/BinaryDistance.cuh>
-#include <faiss/gpu/impl/BinaryFlatIndex.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/impl/BinaryDistance.h>
+#include <faiss/hip/impl/BinaryFlatIndex.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 constexpr int kBitsPerByte = 8;
 
@@ -87,5 +87,5 @@ void BinaryFlatIndex::reset() {
     num_ = 0;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

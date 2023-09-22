@@ -13,12 +13,12 @@
 #include <faiss/Index.h>
 #include <faiss/IndexBinary.h>
 #include <faiss/clone_index.h>
-#include <faiss/gpu/GpuClonerOptions.h>
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
+#include <faiss/hip/GpuClonerOptions.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuIndicesOptions.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResourcesProvider;
 
@@ -117,5 +117,5 @@ faiss::IndexBinary* index_binary_cpu_to_gpu_multiple(
         const faiss::IndexBinary* index,
         const GpuMultipleClonerOptions* options = nullptr);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

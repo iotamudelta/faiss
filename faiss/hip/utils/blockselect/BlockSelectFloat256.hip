@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/blockselect/BlockSelectImpl.cuh>
+#include <faiss/hip/utils/blockselect/BlockSelectImpl.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 BLOCK_SELECT_IMPL(float, true, 256, 4);
 BLOCK_SELECT_IMPL(float, false, 256, 4);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -8,7 +8,7 @@
 #pragma once
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 inline __device__ void swap(bool swap, T& x, T& y) {
@@ -22,5 +22,5 @@ inline __device__ void assign(bool assign, T& x, T y) {
     x = assign ? y : x;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

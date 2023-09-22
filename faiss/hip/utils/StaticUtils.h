@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cuda.h>
+#include <hip_runtime_api.h>
 
 // allow usage for non-CUDA files
 #ifndef __host__
@@ -16,7 +16,7 @@
 #endif
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 namespace utils {
 
 template <typename U, typename V>
@@ -90,5 +90,5 @@ static_assert(
         "nextHighestPowerOf2");
 
 } // namespace utils
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

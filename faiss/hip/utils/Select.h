@@ -17,7 +17,7 @@
 #include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Specialization for block-wide monotonic merges producing a merge sort
 // since what we really want is a constexpr loop expansion
@@ -643,5 +643,5 @@ struct WarpSelect<K, V, Dir, Comp, 1, NumThreadQ, ThreadsPerBlock> {
     V threadV;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

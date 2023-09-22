@@ -23,7 +23,7 @@
 #include <faiss/impl/FaissAssert.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 using namespace ::faiss;
 
@@ -110,5 +110,5 @@ void GpuParameterSpace::set_index_parameter(
     ParameterSpace::set_index_parameter(index, name, val);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

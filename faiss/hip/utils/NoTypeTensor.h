@@ -9,11 +9,11 @@
 
 #include <faiss/Index.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 #include <initializer_list>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <int Dim, bool InnerContig = false, typename IndexT = idx_t>
 class NoTypeTensor {
@@ -117,5 +117,5 @@ class NoTypeTensor {
     IndexT stride_[Dim];
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

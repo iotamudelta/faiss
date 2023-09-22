@@ -6,11 +6,11 @@
  */
 
 #include <faiss/Clustering.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/perf/IndexWrapper.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/Timer.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/perf/IndexWrapper.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/Timer.h>
 #include <faiss/utils/random.h>
 #include <gflags/gflags.h>
 #include <memory>
@@ -35,7 +35,7 @@ DEFINE_int64(
 DEFINE_int64(pinned_mem, -1, "pinned memory allocation to use");
 DEFINE_int32(max_points, -1, "max points per centroid");
 
-using namespace faiss::gpu;
+using namespace faiss::hip;
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -59,10 +59,10 @@ int main(int argc, char** argv) {
            FLAGS_transposed ? "enabled" : "disabled");
     printf("verbose %s\n", FLAGS_verbose ? "enabled" : "disabled");
 
-    auto initFn = [](faiss::gpu::GpuResourcesProvider* res,
-                     int dev) -> std::unique_ptr<faiss::gpu::GpuIndexFlat> {
+    auto initFn = [](faiss::hip::GpuResourcesProvider* res,
+                     int dev) -> std::unique_ptr<faiss::hip::GpuIndexFlat> {
         if (FLAGS_pinned_mem >= 0) {
-            ((faiss::gpu::StandardGpuResources*)res)
+            ((faiss::hip::StandardGpuResources*)res)
                     ->setPinnedMemory(FLAGS_pinned_mem);
         }
 
@@ -71,11 +71,11 @@ int main(int argc, char** argv) {
         config.useFloat16 = FLAGS_use_float16;
         config.storeTransposed = FLAGS_transposed;
 
-        auto p = std::unique_ptr<faiss::gpu::GpuIndexFlat>(
+        auto p = std::unique_ptr<faiss::hip::GpuIndexFlat>(
                 FLAGS_L2_metric
-                        ? (faiss::gpu::GpuIndexFlat*)new faiss::gpu::
+                        ? (faiss::hip::GpuIndexFlat*)new faiss::hip::
                                   GpuIndexFlatL2(res, FLAGS_dim, config)
-                        : (faiss::gpu::GpuIndexFlat*)new faiss::gpu::
+                        : (faiss::hip::GpuIndexFlat*)new faiss::hip::
                                   GpuIndexFlatIP(res, FLAGS_dim, config));
 
         if (FLAGS_min_paging_size >= 0) {
@@ -84,10 +84,10 @@ int main(int argc, char** argv) {
         return p;
     };
 
-    IndexWrapper<faiss::gpu::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
+    IndexWrapper<faiss::hip::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
 
     CUDA_VERIFY(cudaProfilerStart());
-    faiss::gpu::synchronizeAllDevices();
+    faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
 

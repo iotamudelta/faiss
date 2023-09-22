@@ -5,35 +5,35 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/Timer.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/Timer.h>
 #include <faiss/impl/FaissAssert.h>
 #include <chrono>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
-KernelTimer::KernelTimer(cudaStream_t stream)
+KernelTimer::KernelTimer(hipStream_t stream)
         : startEvent_(0), stopEvent_(0), stream_(stream), valid_(true) {
-    CUDA_VERIFY(cudaEventCreate(&startEvent_));
-    CUDA_VERIFY(cudaEventCreate(&stopEvent_));
+    CUDA_VERIFY(hipEventCreate(&startEvent_));
+    CUDA_VERIFY(hipEventCreate(&stopEvent_));
 
-    CUDA_VERIFY(cudaEventRecord(startEvent_, stream_));
+    CUDA_VERIFY(hipEventRecord(startEvent_, stream_));
 }
 
 KernelTimer::~KernelTimer() {
-    CUDA_VERIFY(cudaEventDestroy(startEvent_));
-    CUDA_VERIFY(cudaEventDestroy(stopEvent_));
+    CUDA_VERIFY(hipEventDestroy(startEvent_));
+    CUDA_VERIFY(hipEventDestroy(stopEvent_));
 }
 
 float KernelTimer::elapsedMilliseconds() {
     FAISS_ASSERT(valid_);
 
-    CUDA_VERIFY(cudaEventRecord(stopEvent_, stream_));
-    CUDA_VERIFY(cudaEventSynchronize(stopEvent_));
+    CUDA_VERIFY(hipEventRecord(stopEvent_, stream_));
+    CUDA_VERIFY(hipEventSynchronize(stopEvent_));
 
     auto time = 0.0f;
-    CUDA_VERIFY(cudaEventElapsedTime(&time, startEvent_, stopEvent_));
+    CUDA_VERIFY(hipEventElapsedTime(&time, startEvent_, stopEvent_));
     valid_ = false;
 
     return time;
@@ -51,5 +51,5 @@ float CpuTimer::elapsedMilliseconds() {
     return duration.count();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

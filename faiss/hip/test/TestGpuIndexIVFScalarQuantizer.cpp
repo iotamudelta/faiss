@@ -7,10 +7,10 @@
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexScalarQuantizer.h>
-#include <faiss/gpu/GpuIndexIVFScalarQuantizer.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndexIVFScalarQuantizer.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <gtest/gtest.h>
 #include <cmath>
 #include <sstream>
@@ -20,24 +20,24 @@ constexpr float kF32MaxRelErr = 0.03f;
 
 struct Options {
     Options() {
-        numAdd = 2 * faiss::gpu::randVal(2000, 5000);
-        dim = faiss::gpu::randVal(64, 200);
+        numAdd = 2 * faiss::hip::randVal(2000, 5000);
+        dim = faiss::hip::randVal(64, 200);
 
         numCentroids = std::sqrt((float)numAdd / 2);
         numTrain = numCentroids * 40;
-        nprobe = faiss::gpu::randVal(std::min(10, numCentroids), numCentroids);
-        numQuery = faiss::gpu::randVal(32, 100);
+        nprobe = faiss::hip::randVal(std::min(10, numCentroids), numCentroids);
+        numQuery = faiss::hip::randVal(32, 100);
 
         // Due to the approximate nature of the query and of floating point
         // differences between GPU and CPU, to stay within our error bounds,
         // only use a small k
-        k = std::min(faiss::gpu::randVal(10, 30), numAdd / 40);
-        indicesOpt = faiss::gpu::randSelect(
-                {faiss::gpu::INDICES_CPU,
-                 faiss::gpu::INDICES_32_BIT,
-                 faiss::gpu::INDICES_64_BIT});
+        k = std::min(faiss::hip::randVal(10, 30), numAdd / 40);
+        indicesOpt = faiss::hip::randSelect(
+                {faiss::hip::INDICES_CPU,
+                 faiss::hip::INDICES_32_BIT,
+                 faiss::hip::INDICES_64_BIT});
 
-        device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+        device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
     }
 
     std::string toString() const {
@@ -58,12 +58,12 @@ struct Options {
     int numQuery;
     int k;
     int device;
-    faiss::gpu::IndicesOptions indicesOpt;
+    faiss::hip::IndicesOptions indicesOpt;
 };
 
 void runCopyToTest(faiss::ScalarQuantizer::QuantizerType qtype) {
     using namespace faiss;
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     Options opt;
     std::vector<float> trainVecs = randVecs(opt.numTrain, opt.dim);
@@ -143,7 +143,7 @@ TEST(TestGpuIndexIVFScalarQuantizer, CopyTo_4bit_uniform) {
 
 void runCopyFromTest(faiss::ScalarQuantizer::QuantizerType qtype) {
     using namespace faiss;
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     Options opt;
     std::vector<float> trainVecs = randVecs(opt.numTrain, opt.dim);
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // defines to simplify the SASS assembly structure file/line in the profiler
 #define GET_BITFIELD_U32(OUT, VAL, POS, LEN) 
@@ -90,5 +90,5 @@ __device__ __forceinline__ void namedBarrierArrived(int name, int numThreads) {
 //XXX                 : "memory");
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

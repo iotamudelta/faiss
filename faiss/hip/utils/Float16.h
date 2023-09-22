@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 
 // Some compute capabilities have full float16 ALUs.
 #if __CUDA_ARCH__ >= 530
@@ -19,7 +19,7 @@
 #include <hip/hip_fp16.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // 64 bytes containing 4 half (float16) values
 struct Half4 {
@@ -69,5 +69,5 @@ inline bool getDeviceSupportsFloat16Math(int device) {
     return (prop.major >= 6 || (prop.major == 5 && prop.minor >= 3));
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

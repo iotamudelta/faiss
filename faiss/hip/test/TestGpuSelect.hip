@@ -22,7 +22,7 @@
 
 void testForSize(int rows, int cols, int k, bool dir, bool warp) {
     using namespace faiss;
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     StandardGpuResources res;
 
@@ -130,10 +130,10 @@ void testForSize(int rows, int cols, int k, bool dir, bool warp) {
 // General test
 TEST(TestGpuSelect, test) {
     for (int i = 0; i < 10; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, 30000);
-        int k = std::min(cols, faiss::gpu::randVal(1, GPU_MAX_SELECTION_K));
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, 30000);
+        int k = std::min(cols, faiss::hip::randVal(1, GPU_MAX_SELECTION_K));
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, k, dir, false);
     }
@@ -142,9 +142,9 @@ TEST(TestGpuSelect, test) {
 // Test for k = 1
 TEST(TestGpuSelect, test1) {
     for (int i = 0; i < 5; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, 30000);
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, 30000);
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, 1, dir, false);
     }
@@ -154,9 +154,9 @@ TEST(TestGpuSelect, test1) {
 // just sorted)
 TEST(TestGpuSelect, testExact) {
     for (int i = 0; i < 5; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, GPU_MAX_SELECTION_K);
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, GPU_MAX_SELECTION_K);
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, cols, dir, false);
     }
@@ -165,10 +165,10 @@ TEST(TestGpuSelect, testExact) {
 // General test
 TEST(TestGpuSelect, testWarp) {
     for (int i = 0; i < 10; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, 30000);
-        int k = std::min(cols, faiss::gpu::randVal(1, GPU_MAX_SELECTION_K));
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, 30000);
+        int k = std::min(cols, faiss::hip::randVal(1, GPU_MAX_SELECTION_K));
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, k, dir, true);
     }
@@ -177,9 +177,9 @@ TEST(TestGpuSelect, testWarp) {
 // Test for k = 1
 TEST(TestGpuSelect, test1Warp) {
     for (int i = 0; i < 5; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, 30000);
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, 30000);
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, 1, dir, true);
     }
@@ -189,9 +189,9 @@ TEST(TestGpuSelect, test1Warp) {
 // just sorted)
 TEST(TestGpuSelect, testExactWarp) {
     for (int i = 0; i < 5; ++i) {
-        int rows = faiss::gpu::randVal(10, 100);
-        int cols = faiss::gpu::randVal(1, GPU_MAX_SELECTION_K);
-        bool dir = faiss::gpu::randBool();
+        int rows = faiss::hip::randVal(10, 100);
+        int cols = faiss::hip::randVal(1, GPU_MAX_SELECTION_K);
+        bool dir = faiss::hip::randBool();
 
         testForSize(rows, cols, cols, dir, true);
     }
@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

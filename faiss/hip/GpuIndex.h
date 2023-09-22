@@ -23,10 +23,10 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/GpuResources.h>
+#include <faiss/hip/GpuResources.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 struct GpuIndexConfig {
     /// GPU device on which the index is resident
@@ -191,5 +191,5 @@ bool isGpuIndex(faiss::Index* index);
 /// Does the given CPU index instance have a corresponding GPU implementation?
 bool isGpuIndexImplemented(faiss::Index* index);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

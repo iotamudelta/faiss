@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/IVFInterleaved.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/hip/impl/IVFInterleaved.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/DeviceVector.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename CODEC_TYPE,
@@ -352,7 +352,7 @@ void ivfInterleavedScanImpl IVF_INTERLEAVED_SCAN_IMPL_ARGS;
 
 // clang-format off
 #define IVFINTERLEAVED_1_PARAMS    128,1,1
-#define IVFINTERLEAVED_32_PARAMS   128,32,2
+#define IVFINTERLEAVED_32_PARAMS   128,64,2
 #define IVFINTERLEAVED_64_PARAMS   128,64,3
 #define IVFINTERLEAVED_128_PARAMS  128,128,3
 #define IVFINTERLEAVED_256_PARAMS  128,256,4
@@ -361,5 +361,5 @@ void ivfInterleavedScanImpl IVF_INTERLEAVED_SCAN_IMPL_ARGS;
 #define IVFINTERLEAVED_2048_PARAMS  64,2048,8
 // clang-format on
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

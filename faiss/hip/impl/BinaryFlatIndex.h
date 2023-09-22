@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/DeviceVector.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -61,5 +61,5 @@ class BinaryFlatIndex {
     DeviceTensor<unsigned char, 2, true> vectors_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

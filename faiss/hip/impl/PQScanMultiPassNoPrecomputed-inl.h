@@ -1,3 +1,5 @@
+
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,22 +8,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/impl/PQCodeDistances.cuh>
-#include <faiss/gpu/impl/PQCodeLoad.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/LoadStoreOperators.cuh>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/WarpPackedBits.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/impl/IVFUtils.h>
+#include <faiss/hip/impl/PQCodeDistances.h>
+#include <faiss/hip/impl/PQCodeLoad.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/HostTensor.h>
+#include <faiss/hip/utils/LoadStoreOperators.h>
+#include <faiss/hip/utils/NoTypeTensor.h>
+#include <faiss/hip/utils/WarpPackedBits.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // A basic implementation that works for the interleaved by vector layout for
 // any number of sub-quantizers
@@ -754,5 +756,5 @@ void runPQScanMultiPassNoPrecomputed(
     streamWait({stream}, streams);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

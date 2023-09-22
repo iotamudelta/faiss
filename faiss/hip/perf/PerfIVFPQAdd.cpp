@@ -8,11 +8,11 @@
 #include <cuda_profiler_api.h>
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFPQ.h>
-#include <faiss/gpu/GpuIndexIVFPQ.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/Timer.h>
+#include <faiss/hip/GpuIndexIVFPQ.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/Timer.h>
 #include <gflags/gflags.h>
 #include <map>
 #include <vector>
@@ -39,11 +39,11 @@ int main(int argc, char** argv) {
     int bytesPerVec = FLAGS_bytes_per_vec;
     int bitsPerCode = FLAGS_bits_per_code;
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
 
     // IndexIVFPQ will complain, but just give us enough to get through this
     int numTrain = 4 * numCentroids;
-    std::vector<float> trainVecs = faiss::gpu::randVecs(numTrain, dim);
+    std::vector<float> trainVecs = faiss::hip::randVecs(numTrain, dim);
 
     faiss::IndexFlatL2 coarseQuantizer(dim);
     faiss::IndexIVFPQ cpuIndex(
@@ -52,11 +52,11 @@ int main(int argc, char** argv) {
         cpuIndex.train(numTrain, trainVecs.data());
     }
 
-    faiss::gpu::GpuIndexIVFPQConfig config;
+    faiss::hip::GpuIndexIVFPQConfig config;
     config.device = 0;
-    config.indicesOptions = (faiss::gpu::IndicesOptions)FLAGS_index;
+    config.indicesOptions = (faiss::hip::IndicesOptions)FLAGS_index;
 
-    faiss::gpu::GpuIndexIVFPQ gpuIndex(
+    faiss::hip::GpuIndexIVFPQ gpuIndex(
             &res,
             dim,
             numCentroids,
@@ -86,10 +86,10 @@ int main(int argc, char** argv) {
             }
         }
 
-        auto addVecs = faiss::gpu::randVecs(FLAGS_batch_size, dim);
+        auto addVecs = faiss::hip::randVecs(FLAGS_batch_size, dim);
 
         if (FLAGS_time_gpu) {
-            faiss::gpu::CpuTimer timer;
+            faiss::hip::CpuTimer timer;
             gpuIndex.add(FLAGS_batch_size, addVecs.data());
             CUDA_VERIFY(cudaDeviceSynchronize());
             auto time = timer.elapsedMilliseconds();
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
         }
 
         if (FLAGS_time_cpu) {
-            faiss::gpu::CpuTimer timer;
+            faiss::hip::CpuTimer timer;
             cpuIndex.add(FLAGS_batch_size, addVecs.data());
             auto time = timer.elapsedMilliseconds();
 

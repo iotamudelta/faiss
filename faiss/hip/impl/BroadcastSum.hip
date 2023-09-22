@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -9,13 +10,13 @@
 #include <faiss/impl/FaissAssert.h>
 #include <algorithm>
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T, int kRowsPerBlock, int kRowUnroll, int kColLoad>
 __global__ void sumAlongColumns(
@@ -374,5 +375,5 @@ void runSumAlongRows(
     runSumAlongRows<half>(input, output, zeroClamp, stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

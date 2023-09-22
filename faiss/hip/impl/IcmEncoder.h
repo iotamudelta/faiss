@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceTensor.h>
 
 #include <random>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 struct IcmEncoderImpl {
     int M;    ///< number of codebooks
@@ -75,5 +75,5 @@ struct IcmEncoderImpl {
             int icmIters) const;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

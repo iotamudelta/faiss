@@ -8,7 +8,7 @@
 #include <utility> // std::move
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename T,
@@ -188,5 +188,5 @@ __host__ DeviceTensor<T, Dim, InnerContig, IndexT, PtrTraits>& DeviceTensor<
     return *this;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

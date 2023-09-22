@@ -20,21 +20,21 @@ TEST(TestGpuMemoryException, AddException) {
     size_t devFree = 0;
     size_t devTotal = 0;
 
-    CUDA_VERIFY(cudaMemGetInfo(&devFree, &devTotal));
+    CUDA_VERIFY(hipMemGetInfo(&devFree, &devTotal));
 
     // Figure out the dimensionality needed to get at least greater than
     // devTotal
     size_t brokenAddDims = ((devTotal / sizeof(float)) / numBrokenAdd) + 1;
     size_t realAddDims = 128;
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
 
-    faiss::gpu::GpuIndexFlatConfig config;
-    config.device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    faiss::hip::GpuIndexFlatConfig config;
+    config.device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::GpuIndexFlatL2 gpuIndexL2Broken(
+    faiss::hip::GpuIndexFlatL2 gpuIndexL2Broken(
             &res, (int)brokenAddDims, config);
-    faiss::gpu::GpuIndexFlatL2 gpuIndexL2(&res, (int)realAddDims, config);
+    faiss::hip::GpuIndexFlatL2 gpuIndexL2(&res, (int)realAddDims, config);
     faiss::IndexFlatL2 cpuIndex((int)realAddDims);
 
     // Should throw on attempting to allocate too much data
@@ -49,7 +49,7 @@ TEST(TestGpuMemoryException, AddException) {
 
     // Should be able to add a smaller set of data now
     {
-        auto vecs = faiss::gpu::randVecs(numRealAdd, realAddDims);
+        auto vecs = faiss::hip::randVecs(numRealAdd, realAddDims);
         EXPECT_NO_THROW(gpuIndexL2.add(numRealAdd, vecs.data()));
         cpuIndex.add(numRealAdd, vecs.data());
     }
@@ -67,7 +67,7 @@ TEST(TestGpuMemoryException, AddException) {
     // Should be able to query results from what we had before
     {
         size_t numQuery = 10;
-        auto vecs = faiss::gpu::randVecs(numQuery, realAddDims);
+        auto vecs = faiss::hip::randVecs(numQuery, realAddDims);
         EXPECT_NO_THROW(compareIndices(
                 vecs,
                 cpuIndex,
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/warpselect/WarpSelectImpl.cuh>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/warpselect/WarpSelectImpl.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 #if GPU_MAX_SELECTION_K >= 2048
 WARP_SELECT_IMPL(float, true, 2048, 8);
 #endif
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

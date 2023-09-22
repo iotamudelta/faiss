@@ -19,13 +19,13 @@
 
 find_package(hip REQUIRED)
 find_package(hsa-runtime64 REQUIRED)
-find_package(hipblas REQUIRED)
+#find_package(hipblas REQUIRED)
 
 # Defines `gtest_discover_tests()`.
 include(GoogleTest)
 
 add_library(faiss_gpu_test_helper TestUtils.cpp)
-target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::amdhip64 hipblas)
+target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::amdhip64)
 
 macro(faiss_gpu_test file)
   get_filename_component(test_name ${file} NAME_WE)

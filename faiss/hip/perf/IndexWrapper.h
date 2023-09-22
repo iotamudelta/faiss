@@ -8,20 +8,20 @@
 #pragma once
 
 #include <faiss/IndexReplicas.h>
-#include <faiss/gpu/StandardGpuResources.h>
+#include <faiss/hip/StandardGpuResources.h>
 #include <functional>
 #include <memory>
 #include <vector>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // If we want to run multi-GPU, create a proxy to wrap the indices.
 // If we don't want multi-GPU, don't involve the proxy, so it doesn't
 // affect the timings.
 template <typename GpuIndex>
 struct IndexWrapper {
-    std::vector<std::unique_ptr<faiss::gpu::StandardGpuResources>> resources;
+    std::vector<std::unique_ptr<faiss::hip::StandardGpuResources>> resources;
     std::vector<std::unique_ptr<GpuIndex>> subIndex;
     std::unique_ptr<faiss::IndexReplicas> replicaIndex;
 
@@ -35,7 +35,7 @@ struct IndexWrapper {
     void setNumProbes(size_t nprobe);
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/perf/IndexWrapper-inl.h>
+#include <faiss/hip/perf/IndexWrapper-inl.h>

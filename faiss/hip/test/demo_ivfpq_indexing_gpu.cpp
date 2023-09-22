@@ -12,10 +12,10 @@
 
 #include <sys/time.h>
 
-#include <faiss/gpu/GpuAutoTune.h>
-#include <faiss/gpu/GpuCloner.h>
-#include <faiss/gpu/GpuIndexIVFPQ.h>
-#include <faiss/gpu/StandardGpuResources.h>
+#include <faiss/hip/GpuAutoTune.h>
+#include <faiss/hip/GpuCloner.h>
+#include <faiss/hip/GpuIndexIVFPQ.h>
+#include <faiss/hip/StandardGpuResources.h>
 #include <faiss/index_io.h>
 
 double elapsed() {
@@ -45,15 +45,15 @@ int main() {
     // a reasonable number of centroids to index nb vectors
     int ncentroids = int(4 * sqrt(nb));
 
-    faiss::gpu::StandardGpuResources resources;
+    faiss::hip::StandardGpuResources resources;
 
     // the coarse quantizer should not be dealloced before the index
     // 4 = nb of bytes per code (d must be a multiple of this)
     // 8 = nb of bits per sub-code (almost always 8)
-    faiss::gpu::GpuIndexIVFPQConfig config;
+    faiss::hip::GpuIndexIVFPQConfig config;
     config.device = dev_no;
 
-    faiss::gpu::GpuIndexIVFPQ index(
+    faiss::hip::GpuIndexIVFPQ index(
             &resources, d, ncentroids, 4, 8, faiss::METRIC_L2, config);
 
     std::mt19937 rng;
@@ -82,7 +82,7 @@ int main() {
                elapsed() - t0,
                outfilename);
 
-        faiss::Index* cpu_index = faiss::gpu::index_gpu_to_cpu(&index);
+        faiss::Index* cpu_index = faiss::hip::index_gpu_to_cpu(&index);
 
         write_index(cpu_index, outfilename);
 

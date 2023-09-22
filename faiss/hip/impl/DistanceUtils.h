@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -10,14 +11,14 @@
 
 #include <algorithm>
 
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 //
 // Shared utilities for brute-force distance calculations
 //
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 struct IPDistance {
     __host__ __device__ IPDistance() : dist(0) {}
@@ -374,5 +375,5 @@ inline void chooseTileSize(
     tileCols = std::min(targetUsage / preferredTileRows, numCentroids);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

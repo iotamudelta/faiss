@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,18 +7,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <thrust/execution_policy.h>
 #include <thrust/scan.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
-#include <faiss/gpu/utils/ThrustUtils.cuh>
+#include <faiss/hip/impl/IVFUtils.h>
+#include <faiss/hip/utils/Tensor.h>
+#include <faiss/hip/utils/ThrustUtils.h>
 
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Calculates the total number of intermediate distances to consider
 // for all queries
@@ -71,12 +72,12 @@ void runCalcListOffsets(
             res, stream, thrustMem.data(), thrustMem.getSizeInBytes());
 
     thrust::inclusive_scan(
-            thrust::cuda::par(alloc).on(stream),
+            thrust::hip::par(alloc).on(stream),
             prefixSumOffsets.data(),
             prefixSumOffsets.data() + totalSize,
             prefixSumOffsets.data());
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

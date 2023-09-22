@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/hip/utils/Float16.h>
 
 #ifndef __HALF2_TO_UI
 // cuda_fp16.hpp doesn't export this
@@ -21,7 +21,7 @@
 //
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct LoadStore {
@@ -97,5 +97,5 @@ struct LoadStore<Half8> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

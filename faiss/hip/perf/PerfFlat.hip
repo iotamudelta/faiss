@@ -6,15 +6,15 @@
  */
 
 #include <faiss/IndexFlat.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/perf/IndexWrapper.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/Timer.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/perf/IndexWrapper.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/Timer.h>
 #include <faiss/utils/random.h>
 #include <gflags/gflags.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/HostTensor.h>
 #include <map>
 #include <memory>
 #include <vector>
@@ -36,7 +36,7 @@ DEFINE_int64(pinned_mem, 0, "pinned memory allocation to use");
 DEFINE_bool(cpu, true, "run the CPU code for timing and comparison");
 DEFINE_bool(use_unified_mem, false, "use Pascal unified memory for the index");
 
-using namespace faiss::gpu;
+using namespace faiss::hip;
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -69,9 +69,9 @@ int main(int argc, char** argv) {
     // Convert to GPU index
     printf("Copying index to %d GPU(s)...\n", FLAGS_num_gpus);
 
-    auto initFn = [&index](faiss::gpu::GpuResourcesProvider* res, int dev)
-            -> std::unique_ptr<faiss::gpu::GpuIndexFlat> {
-        ((faiss::gpu::StandardGpuResources*)res)
+    auto initFn = [&index](faiss::hip::GpuResourcesProvider* res, int dev)
+            -> std::unique_ptr<faiss::hip::GpuIndexFlat> {
+        ((faiss::hip::StandardGpuResources*)res)
                 ->setPinnedMemory(FLAGS_pinned_mem);
 
         GpuIndexFlatConfig config;
@@ -81,12 +81,12 @@ int main(int argc, char** argv) {
         config.memorySpace = FLAGS_use_unified_mem ? MemorySpace::Unified
                                                    : MemorySpace::Device;
 
-        auto p = std::unique_ptr<faiss::gpu::GpuIndexFlat>(
-                new faiss::gpu::GpuIndexFlat(res, index.get(), config));
+        auto p = std::unique_ptr<faiss::hip::GpuIndexFlat>(
+                new faiss::hip::GpuIndexFlat(res, index.get(), config));
         return p;
     };
 
-    IndexWrapper<faiss::gpu::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
+    IndexWrapper<faiss::hip::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
     printf("copy done\n");
 
     // Build query vectors
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
     HostTensor<faiss::idx_t, 2, true> gpuIndices({numQueries, FLAGS_k});
 
     CUDA_VERIFY(hipProfilerStart());
-    faiss::gpu::synchronizeAllDevices();
+    faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
 

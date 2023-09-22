@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <hipblas.h>
+#include <hipblas/hipblas.h>
 #include <faiss/hip/utils/DeviceTensor.h>
 #include <faiss/hip/utils/Float16.h>
 #include <faiss/hip/utils/HostTensor.h>
 #include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -49,7 +49,7 @@ void runIteratedMatrixMult(
         hipblasHandle_t handle,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/utils/MatrixMult-inl.cuh>
+#include <faiss/hip/utils/MatrixMult-inl.h>

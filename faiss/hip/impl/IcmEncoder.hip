@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,22 +7,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/IcmEncoder.cuh>
+#include <faiss/hip/impl/IcmEncoder.h>
 
-#include <faiss/gpu/GpuResources.h>
+#include <faiss/hip/GpuResources.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
-#include <faiss/gpu/utils/Pair.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/MatrixMult.h>
+#include <faiss/hip/utils/Pair.h>
+#include <faiss/hip/utils/Reductions.h>
 
-#include <hiprand_kernel.h>
+#include <hiprand/hiprand_kernel.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 extern __shared__ char smem[];
 
@@ -376,5 +377,5 @@ void IcmEncoderImpl::encode(
     fromDevice<int32_t, 2>(bestCodes, codesHost, stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

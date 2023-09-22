@@ -13,7 +13,7 @@
 // Utilities for bit packing and unpacking CPU non-interleaved and GPU
 // interleaved by 32 encodings
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Unpacks arbitrary bitwidth codes to a whole number of bytes per code
 // The layout of the input is (v0 d0)(v0 d1) ... (v0 dD)(v1 d0) ...
@@ -53,5 +53,5 @@ std::vector<uint8_t> packInterleaved(
         int dims,
         int bitsPerCode);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

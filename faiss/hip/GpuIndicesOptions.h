@@ -8,7 +8,7 @@
 #pragma once
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// How user vector index data is stored on the GPU
 enum IndicesOptions {
@@ -27,5 +27,5 @@ enum IndicesOptions {
     INDICES_64_BIT = 3,
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

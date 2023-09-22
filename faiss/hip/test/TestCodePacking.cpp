@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/InterleavedCodes.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/impl/InterleavedCodes.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <gtest/gtest.h>
 #include <cmath>
 #include <random>
@@ -15,7 +15,7 @@
 #include <vector>
 
 TEST(TestCodePacking, NonInterleavedCodes_UnpackPack) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     // We are fine using non-fixed seeds here, the results should be fully
     // deterministic
@@ -67,7 +67,7 @@ TEST(TestCodePacking, NonInterleavedCodes_UnpackPack) {
 }
 
 TEST(TestCodePacking, NonInterleavedCodes_PackUnpack) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     // We are fine using non-fixed seeds here, the results should be fully
     // deterministic
@@ -105,7 +105,7 @@ TEST(TestCodePacking, NonInterleavedCodes_PackUnpack) {
 }
 
 TEST(TestCodePacking, InterleavedCodes_UnpackPack) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     // We are fine using non-fixed seeds here, the results should be fully
     // deterministic
@@ -240,7 +240,7 @@ TEST(TestCodePacking, InterleavedCodes_UnpackPack) {
 }
 
 TEST(TestCodePacking, InterleavedCodes_PackUnpack) {
-    using namespace faiss::gpu;
+    using namespace faiss::hip;
 
     // We are fine using non-fixed seeds here, the results should be fully
     // deterministic

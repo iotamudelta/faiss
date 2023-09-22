@@ -20,21 +20,21 @@
  * limitations under the License.
  */
 
-#include <faiss/gpu/impl/RaftUtils.h>
-#include <faiss/gpu/impl/RaftFlatIndex.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
+#include <faiss/hip/impl/RaftUtils.h>
+#include <faiss/hip/impl/RaftFlatIndex.h>
+#include <faiss/hip/utils/ConversionOperators.h>
 
 #include <vector>
 
 #include <raft/core/device_mdspan.hpp>
 #include <raft/core/logger.hpp>
 #include <raft/distance/distance_types.hpp>
-#include <raft/neighbors/brute_force.cuh>
+#include <raft/neighbors/brute_force.h>
 
 #define RAFT_NAME "raft"
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 using namespace raft::distance;
 using namespace raft::neighbors;
@@ -152,5 +152,5 @@ void RaftFlatIndex::query(
             exactDistance);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

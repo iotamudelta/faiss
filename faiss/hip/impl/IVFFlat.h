@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/GpuScalarQuantizer.cuh>
-#include <faiss/gpu/impl/IVFBase.cuh>
+#include <faiss/hip/impl/GpuScalarQuantizer.h>
+#include <faiss/hip/impl/IVFBase.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class IVFFlat : public IVFBase {
    public:
@@ -99,5 +99,5 @@ class IVFFlat : public IVFBase {
     std::unique_ptr<GpuScalarQuantizer> scalarQ_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

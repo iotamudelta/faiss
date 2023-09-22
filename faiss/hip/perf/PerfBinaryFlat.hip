@@ -6,15 +6,15 @@
  */
 
 #include <faiss/IndexBinaryFlat.h>
-#include <faiss/gpu/GpuIndexBinaryFlat.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/Timer.h>
+#include <faiss/hip/GpuIndexBinaryFlat.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/Timer.h>
 #include <faiss/utils/random.h>
 #include <gflags/gflags.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/HostTensor.h>
 #include <map>
 #include <memory>
 #include <vector>
@@ -30,7 +30,7 @@ DEFINE_int64(pinned_mem, 0, "pinned memory allocation to use");
 DEFINE_bool(cpu, true, "run the CPU code for timing and comparison");
 DEFINE_bool(use_unified_mem, false, "use Pascal unified memory for the index");
 
-using namespace faiss::gpu;
+using namespace faiss::hip;
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -60,9 +60,9 @@ int main(int argc, char** argv) {
     config.memorySpace =
             FLAGS_use_unified_mem ? MemorySpace::Unified : MemorySpace::Device;
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
 
-    faiss::gpu::GpuIndexBinaryFlat gpuIndex(&res, index.get(), config);
+    faiss::hip::GpuIndexBinaryFlat gpuIndex(&res, index.get(), config);
     printf("copy done\n");
 
     // Build query vectors
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
     HostTensor<faiss::idx_t, 2, true> gpuIndices({numQueries, FLAGS_k});
 
     CUDA_VERIFY(hipProfilerStart());
-    faiss::gpu::synchronizeAllDevices();
+    faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
 

@@ -9,11 +9,11 @@
 #include <faiss/hip/utils/warpselect/WarpSelectImpl.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 #if GPU_MAX_SELECTION_K >= 2048
 WARP_SELECT_IMPL(float, false, 2048, 8);
 #endif
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

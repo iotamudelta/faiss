@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <faiss/gpu/GpuIndicesOptions.h>
+#include <faiss/hip/GpuIndicesOptions.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// set some options on how to copy to GPU
 struct GpuClonerOptions {
@@ -55,5 +55,5 @@ struct GpuMultipleClonerOptions : public GpuClonerOptions {
     bool common_ivf_quantizer = false;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

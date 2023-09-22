@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/utils/Float16.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct Comparator {
@@ -43,5 +43,5 @@ struct Comparator<half> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

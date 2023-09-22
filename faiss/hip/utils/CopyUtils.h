@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/HostTensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Ensure the memory at `p` is either on the given device, or copy it
 /// to the device in a new temporary allocation.
@@ -132,5 +132,5 @@ void fromDevice(Tensor<T, Dim, true>& src, T* dst, hipStream_t stream) {
     fromDevice(src.data(), dst, src.numElements(), stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

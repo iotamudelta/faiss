@@ -6,20 +6,20 @@
  */
 
 #include <faiss/IndexFlat.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/IndexUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/RaftFlatIndex.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/IndexUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/impl/FlatIndex.h>
+#include <faiss/hip/impl/RaftFlatIndex.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/Float16.h>
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 GpuIndexFlat::GpuIndexFlat(
         GpuResourcesProvider* provider,
@@ -436,5 +436,5 @@ void GpuIndexFlatIP::copyTo(faiss::IndexFlat* index) {
     GpuIndexFlat::copyTo(index);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuCloner.h>
+#include <faiss/hip/GpuCloner.h>
 #include <faiss/impl/FaissAssert.h>
 #include <typeinfo>
 
-#include <faiss/gpu/StandardGpuResources.h>
+#include <faiss/hip/StandardGpuResources.h>
 
 #include <faiss/IndexBinaryFlat.h>
 #include <faiss/IndexFlat.h>
@@ -21,18 +21,18 @@
 #include <faiss/IndexScalarQuantizer.h>
 #include <faiss/IndexShardsIVF.h>
 #include <faiss/MetaIndexes.h>
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuIndexBinaryFlat.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuIndexIVFFlat.h>
-#include <faiss/gpu/GpuIndexIVFPQ.h>
-#include <faiss/gpu/GpuIndexIVFScalarQuantizer.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuIndexBinaryFlat.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuIndexIVFFlat.h>
+#include <faiss/hip/GpuIndexIVFPQ.h>
+#include <faiss/hip/GpuIndexIVFScalarQuantizer.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
 #include <faiss/index_io.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /**********************************************************
  * Cloning to CPU
@@ -556,5 +556,5 @@ faiss::IndexBinary* index_binary_cpu_to_gpu_multiple(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

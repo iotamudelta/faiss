@@ -11,7 +11,7 @@
 #include <faiss/Index.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// parameter space and setters for GPU indexes
 struct GpuParameterSpace : faiss::ParameterSpace {
@@ -25,5 +25,5 @@ struct GpuParameterSpace : faiss::ParameterSpace {
             double val) const override;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

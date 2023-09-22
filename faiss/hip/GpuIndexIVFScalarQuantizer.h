@@ -8,11 +8,11 @@
 #pragma once
 
 #include <faiss/IndexScalarQuantizer.h>
-#include <faiss/gpu/GpuIndexIVF.h>
+#include <faiss/hip/GpuIndexIVF.h>
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class IVFFlat;
 class GpuIndexFlat;
@@ -114,5 +114,5 @@ class GpuIndexIVFScalarQuantizer : public GpuIndexIVF {
     std::shared_ptr<IVFFlat> index_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

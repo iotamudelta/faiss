@@ -8,13 +8,13 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/impl/GpuScalarQuantizer.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/impl/GpuScalarQuantizer.h>
+#include <faiss/hip/utils/DeviceVector.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Append user indices to IVF lists
 void runIVFIndicesAppend(
@@ -80,5 +80,5 @@ void runIVFFlatInterleavedAppend(
         GpuResources* res,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

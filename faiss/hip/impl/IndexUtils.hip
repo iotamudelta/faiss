@@ -5,18 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/IndexUtils.h>
+#include <faiss/hip/impl/IndexUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
+#include <faiss/hip/utils/DeviceDefs.h>
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// A collection of various utility functions for index implementation
 
 /// Returns the maximum k-selection value supported based on the CUDA SDK that
-/// we were compiled with. .cu files can use DeviceDefs.cuh, but this is for
+/// we were compiled with. .cu files can use DeviceDefs.h, but this is for
 /// non-CUDA files
 int getMaxKSelection() {
     return GPU_MAX_SELECTION_K;
@@ -38,5 +38,5 @@ void validateNProbe(size_t nprobe) {
             nprobe);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

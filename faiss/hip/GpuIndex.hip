@@ -9,20 +9,20 @@
 #include <faiss/IndexIVFFlat.h>
 #include <faiss/IndexIVFPQ.h>
 #include <faiss/IndexScalarQuantizer.h>
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/IndexUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/IndexUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/hip/utils/CopyUtils.h>
 
 #include <algorithm>
 #include <limits>
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Default CPU search size for which we use paged copies
 constexpr idx_t kMinPageSize = (idx_t)256 * 1024 * 1024;
@@ -513,7 +513,7 @@ bool isGpuIndexImplemented(faiss::Index* index) {
     return false;
 }
 
-} // namespace gpu
+} // namespace hip
 
 // This is the one defined in utils.cpp
 // Crossing fingers that the InitGpuCompileOptions_instance will

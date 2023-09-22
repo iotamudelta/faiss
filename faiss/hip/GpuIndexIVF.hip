@@ -7,17 +7,17 @@
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVF.h>
-#include <faiss/gpu/GpuCloner.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuIndexIVF.h>
-#include <faiss/gpu/impl/IndexUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuCloner.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuIndexIVF.h>
+#include <faiss/hip/impl/IndexUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/hip/impl/IVFBase.h>
+#include <faiss/hip/utils/CopyUtils.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 GpuIndexIVF::GpuIndexIVF(
         GpuResourcesProvider* provider,
@@ -455,5 +455,5 @@ void GpuIndexIVF::trainQuantizer_(idx_t n, const float* x) {
     FAISS_ASSERT(quantizer->ntotal == nlist);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -5,17 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/GpuIndexBinaryFlat.h>
+#include <faiss/hip/GpuIndexBinaryFlat.h>
 
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/impl/IndexUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/BinaryFlatIndex.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/impl/IndexUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/impl/BinaryFlatIndex.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/CopyUtils.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 /// Default CPU search size for which we use paged copies
 constexpr size_t kMinPageSize = (size_t)256 * 1024 * 1024;
@@ -258,5 +258,5 @@ void GpuIndexBinaryFlat::reconstruct(faiss::idx_t key, uint8_t* out) const {
     fromDevice(vec.data(), out, vecs.getSize(1), stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

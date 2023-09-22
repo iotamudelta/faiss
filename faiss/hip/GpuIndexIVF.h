@@ -9,13 +9,13 @@
 
 #include <faiss/Clustering.h>
 #include <faiss/IndexIVF.h> // for SearchParametersIVF
-#include <faiss/gpu/GpuIndex.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuIndicesOptions.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuIndicesOptions.h>
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuIndexFlat;
 class IVFBase;
@@ -143,5 +143,5 @@ class GpuIndexIVF : public GpuIndex, public IndexIVFInterface {
     std::shared_ptr<IVFBase> baseIndex_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

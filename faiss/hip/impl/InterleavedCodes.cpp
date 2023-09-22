@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/InterleavedCodes.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/impl/InterleavedCodes.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 inline uint8_t unpack5(int i, uint8_t vLower, uint8_t vUpper) {
     uint8_t v = 0;
@@ -555,5 +555,5 @@ std::vector<uint8_t> packInterleaved(
     return out;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

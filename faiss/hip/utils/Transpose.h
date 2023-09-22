@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -8,7 +9,7 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
@@ -16,7 +17,7 @@
 #include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct TensorInfo {
@@ -190,5 +191,5 @@ void runTransposeAny(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

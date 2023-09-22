@@ -8,7 +8,7 @@
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
 #include <faiss/IndexIVFPQ.h>
-#include <faiss/gpu/test/TestUtils.h>
+#include <faiss/hip/test/TestUtils.h>
 #include <faiss/index_io.h>
 #include <gflags/gflags.h>
 #include <vector>
@@ -31,14 +31,14 @@ DEFINE_int32(num_train, -1, "number of database vecs to train on");
 
 template <typename T>
 void fillAndSave(T& index, int numTrain, int num, int dim) {
-    auto trainVecs = faiss::gpu::randVecs(numTrain, dim);
+    auto trainVecs = faiss::hip::randVecs(numTrain, dim);
     index.train(numTrain, trainVecs.data());
 
     constexpr int kAddChunk = 1000000;
 
     for (int i = 0; i < num; i += kAddChunk) {
         int numRemaining = (num - i) < kAddChunk ? (num - i) : kAddChunk;
-        auto vecs = faiss::gpu::randVecs(numRemaining, dim);
+        auto vecs = faiss::hip::randVecs(numRemaining, dim);
 
         printf("adding at %d: %d\n", i, numRemaining);
         index.add(numRemaining, vecs.data());

@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,21 +7,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/IVFAppend.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
-#include <faiss/gpu/utils/WarpPackedBits.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/hip/impl/IVFAppend.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/Tensor.h>
+#include <faiss/hip/utils/WarpPackedBits.h>
+#include <faiss/hip/utils/WarpShuffles.h>
 
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 //
 // IVF list metadata aupdate
@@ -642,5 +643,5 @@ void runIVFPQInterleavedAppend(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

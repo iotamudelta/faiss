@@ -8,11 +8,11 @@
 #pragma once
 
 #include <faiss/Index.h> // idx_t
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <
         typename T,
@@ -90,7 +90,7 @@ class DeviceTensor : public Tensor<T, Dim, InnerContig, IndexT, PtrTraits> {
     GpuMemoryReservation reservation_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss
 
-#include <faiss/gpu/utils/DeviceTensor-inl.cuh>
+#include <faiss/hip/utils/DeviceTensor-inl.h>

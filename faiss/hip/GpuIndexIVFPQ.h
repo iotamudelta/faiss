@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <faiss/gpu/GpuIndexIVF.h>
+#include <faiss/hip/GpuIndexIVF.h>
 #include <faiss/impl/ProductQuantizer.h>
 #include <memory>
 #include <vector>
@@ -17,7 +17,7 @@ struct IndexIVFPQ;
 }
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuIndexFlat;
 class IVFPQ;
@@ -160,5 +160,5 @@ class GpuIndexIVFPQ : public GpuIndexIVF {
     std::shared_ptr<IVFPQ> index_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

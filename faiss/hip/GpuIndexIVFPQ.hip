@@ -7,18 +7,18 @@
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFPQ.h>
-#include <faiss/gpu/GpuIndexFlat.h>
-#include <faiss/gpu/GpuIndexIVFPQ.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuIndexIVFPQ.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/utils/utils.h>
-#include <faiss/gpu/impl/IVFPQ.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/hip/impl/IVFPQ.h>
+#include <faiss/hip/utils/CopyUtils.h>
 
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 GpuIndexIVFPQ::GpuIndexIVFPQ(
         GpuResourcesProvider* provider,
@@ -440,5 +440,5 @@ void GpuIndexIVFPQ::verifyPQSettings_() const {
             requiredSmemSize);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

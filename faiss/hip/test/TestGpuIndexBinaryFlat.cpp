@@ -6,11 +6,11 @@
  */
 
 #include <faiss/IndexBinaryFlat.h>
-#include <faiss/gpu/GpuIndexBinaryFlat.h>
-#include <faiss/gpu/StandardGpuResources.h>
-#include <faiss/gpu/impl/IndexUtils.h>
-#include <faiss/gpu/test/TestUtils.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/GpuIndexBinaryFlat.h>
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/impl/IndexUtils.h>
+#include <faiss/hip/test/TestUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/utils/random.h>
 #include <faiss/utils/utils.h>
 #include <gtest/gtest.h>
@@ -65,29 +65,29 @@ void compareBinaryDist(
 
 template <int DimMultiple>
 void testGpuIndexBinaryFlat(int kOverride = -1) {
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    faiss::gpu::GpuIndexBinaryFlatConfig config;
-    config.device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    faiss::hip::GpuIndexBinaryFlatConfig config;
+    config.device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
     // multiples of 8 and multiples of 32 use different implementations
-    int dims = faiss::gpu::randVal(1, 20) * DimMultiple;
-    faiss::gpu::GpuIndexBinaryFlat gpuIndex(&res, dims, config);
+    int dims = faiss::hip::randVal(1, 20) * DimMultiple;
+    faiss::hip::GpuIndexBinaryFlat gpuIndex(&res, dims, config);
 
     faiss::IndexBinaryFlat cpuIndex(dims);
 
     int k = kOverride > 0
             ? kOverride
-            : faiss::gpu::randVal(1, faiss::gpu::getMaxKSelection());
-    int numVecs = faiss::gpu::randVal(k + 1, 20000);
-    int numQuery = faiss::gpu::randVal(1, 1000);
+            : faiss::hip::randVal(1, faiss::hip::getMaxKSelection());
+    int numVecs = faiss::hip::randVal(k + 1, 20000);
+    int numQuery = faiss::hip::randVal(1, 1000);
 
-    auto data = faiss::gpu::randBinaryVecs(numVecs, dims);
+    auto data = faiss::hip::randBinaryVecs(numVecs, dims);
     gpuIndex.add(numVecs, data.data());
     cpuIndex.add(numVecs, data.data());
 
-    auto query = faiss::gpu::randBinaryVecs(numQuery, dims);
+    auto query = faiss::hip::randBinaryVecs(numQuery, dims);
 
     std::vector<int> cpuDist(numQuery * k);
     std::vector<faiss::idx_t> cpuLabels(numQuery * k);
@@ -119,15 +119,15 @@ TEST(TestGpuIndexBinaryFlat, Test32) {
 TEST(TestGpuIndexBinaryFlat, LargeIndex) {
     // Construct on a random device to test multi-device, if we have
     // multiple devices
-    int device = faiss::gpu::randVal(0, faiss::gpu::getNumDevices() - 1);
+    int device = faiss::hip::randVal(0, faiss::hip::getNumDevices() - 1);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
     // Skip this device if we do not have sufficient memory
     constexpr size_t kMem = size_t(8) * 1024 * 1024 * 1024;
 
-    if (faiss::gpu::getFreeMemory(device) < kMem) {
+    if (faiss::hip::getFreeMemory(device) < kMem) {
         std::cerr << "TestGpuIndexFlat.LargeIndex: skipping due "
                      "to insufficient device memory\n";
         return;
@@ -135,11 +135,11 @@ TEST(TestGpuIndexBinaryFlat, LargeIndex) {
 
     std::cerr << "Running LargeIndex test\n";
 
-    faiss::gpu::GpuIndexBinaryFlatConfig config;
+    faiss::hip::GpuIndexBinaryFlatConfig config;
     config.device = device;
 
     int dims = 1250 * 8;
-    faiss::gpu::GpuIndexBinaryFlat gpuIndex(&res, dims, config);
+    faiss::hip::GpuIndexBinaryFlat gpuIndex(&res, dims, config);
 
     faiss::IndexBinaryFlat cpuIndex(dims);
 
@@ -147,8 +147,8 @@ TEST(TestGpuIndexBinaryFlat, LargeIndex) {
     int nb = 4000000;
     int nq = 10;
 
-    auto xb = faiss::gpu::randBinaryVecs(nb, dims);
-    auto xq = faiss::gpu::randBinaryVecs(nq, dims);
+    auto xb = faiss::hip::randBinaryVecs(nb, dims);
+    auto xq = faiss::hip::randBinaryVecs(nq, dims);
     gpuIndex.add(nb, xb.data());
     cpuIndex.add(nb, xb.data());
 
@@ -177,11 +177,11 @@ TEST(TestGpuIndexBinaryFlat, Reconstruct) {
     index->reconstruct_n(0, index->ntotal, xb3.data());
     EXPECT_EQ(xb, xb3);
 
-    faiss::gpu::StandardGpuResources res;
+    faiss::hip::StandardGpuResources res;
     res.noTempMemory();
 
-    std::unique_ptr<faiss::gpu::GpuIndexBinaryFlat> index2(
-            new faiss::gpu::GpuIndexBinaryFlat(&res, index.get()));
+    std::unique_ptr<faiss::hip::GpuIndexBinaryFlat> index2(
+            new faiss::hip::GpuIndexBinaryFlat(&res, index.get()));
 
     std::vector<uint8_t> xb2(8 * n);
 
@@ -193,7 +193,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
 
     // just run with a fixed test seed
-    faiss::gpu::setTestSeed(100);
+    faiss::hip::setTestSeed(100);
 
     return RUN_ALL_TESTS();
 }

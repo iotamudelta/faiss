@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <hip/hip_runtime.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // For growing GPU allocations:
 // Below this size, we always round the allocation size up to the next highest
@@ -147,7 +147,7 @@ class DeviceVector {
     void setAll(const T& value, hipStream_t stream) {
         if (num_ > 0) {
             thrust::fill(
-                    thrust::cuda::par.on(stream), data(), data() + num_, value);
+                    thrust::hip::par.on(stream), data(), data() + num_, value);
         }
     }
 
@@ -271,5 +271,5 @@ class DeviceVector {
     AllocInfo allocInfo_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -7,14 +8,14 @@
  */
 
 #include <faiss/MetricType.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/AuxIndexStructures.h>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/hip/impl/DistanceUtils.h>
+#include <faiss/hip/utils/BlockSelectKernel.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/Select.h>
 
 #include <thrust/device_ptr.h>
 #include <thrust/execution_policy.h>
@@ -29,7 +30,7 @@
 //
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Reduction tree operator
 template <typename DistanceOp, int N>
@@ -281,13 +282,13 @@ void runGeneralDistance(
     // If we're quering against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
 
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outIndices.data(),
                 outIndices.end(),
                 -1);
@@ -451,5 +452,5 @@ void runGeneralDistance(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

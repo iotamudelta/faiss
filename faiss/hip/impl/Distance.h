@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/GeneralDistance.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/hip/impl/GeneralDistance.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/Float16.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -398,5 +398,5 @@ void bfKnnOnDevice(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

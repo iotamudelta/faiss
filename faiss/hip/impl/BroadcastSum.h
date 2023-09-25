@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // output[x][i] += input[i] for all x
 void runSumAlongColumns(
@@ -48,5 +48,5 @@ void runSumAlongRows(
         bool zeroClamp,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

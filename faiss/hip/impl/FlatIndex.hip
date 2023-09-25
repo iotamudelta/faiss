@@ -20,17 +20,17 @@
  * limitations under the License.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/impl/VectorResidual.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/impl/Distance.h>
+#include <faiss/hip/impl/FlatIndex.h>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/impl/VectorResidual.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/CopyUtils.h>
+#include <faiss/hip/utils/Transpose.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 FlatIndex::FlatIndex(
         GpuResources* res,
@@ -300,5 +300,5 @@ void FlatIndex::reset() {
     num_ = 0;
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

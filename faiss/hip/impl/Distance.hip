@@ -4,20 +4,20 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/AuxIndexStructures.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/BroadcastSum.cuh>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/impl/L2Select.cuh>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Limits.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
+#include <faiss/hip/impl/BroadcastSum.h>
+#include <faiss/hip/impl/Distance.h>
+#include <faiss/hip/impl/DistanceUtils.h>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/impl/L2Select.h>
+#include <faiss/hip/utils/BlockSelectKernel.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Limits.h>
+#include <faiss/hip/utils/MatrixMult.h>
 
 #include <thrust/device_ptr.h>
 #include <thrust/execution_policy.h>
@@ -27,7 +27,7 @@
 #include <memory>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 void runAllPairwiseDistance(
@@ -58,7 +58,7 @@ void runAllPairwiseDistance(
     // If we're querying against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
@@ -150,13 +150,13 @@ void runDistance(
     // If we're querying against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
 
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outIndices.data(),
                 outIndices.end(),
                 -1);
@@ -640,5 +640,5 @@ void runIPDistance(
             outIndices);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 void runL2Norm(
         Tensor<float, 2, true>& input,
@@ -26,5 +26,5 @@ void runL2Norm(
         bool normSquared,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

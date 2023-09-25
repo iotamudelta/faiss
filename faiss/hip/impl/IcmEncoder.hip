@@ -8,7 +8,7 @@
  */
 
 #include <faiss/hip/impl/IcmEncoder.h>
-
+#include <faiss/hip/utils/MathOperators.h>
 #include <faiss/hip/GpuResources.h>
 #include <faiss/impl/FaissAssert.h>
 #include <faiss/hip/impl/L2Norm.h>

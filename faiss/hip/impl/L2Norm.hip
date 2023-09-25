@@ -1,4 +1,4 @@
-#include "hip/hip_runtime.h"
+
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -6,21 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
-
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/impl/L2Norm.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Float16.h>
+#include <faiss/hip/utils/PtxUtils.h>
+#include <faiss/hip/utils/Reductions.h>
+#include "hip/hip_runtime_api.h"
+#include "hip/hip_runtime.h"
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Input: (batch x dim)
 // Output: (batch norm)
@@ -319,5 +320,5 @@ void runL2Norm(
     runL2Norm<half, half2>(input, inputRowMajor, output, normSquared, stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

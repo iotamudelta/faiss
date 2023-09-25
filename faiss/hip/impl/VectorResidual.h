@@ -8,10 +8,10 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Calculates residual v_i - c_j for all v_i in vecs where j = vecToCentroid[i]
 void runCalcResidual(
@@ -55,5 +55,5 @@ void runReconstruct(
         Tensor<float, 2, true>& out,
         hipStream_t stream);
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

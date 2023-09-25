@@ -22,7 +22,7 @@
 
 #include <faiss/hip/GpuDistance.h>
 #include <faiss/hip/GpuResources.h>
-#include <faiss/gpu/utils/DeviceUtils.h>
+#include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
 #include <faiss/utils/Heap.h>
 #include <faiss/hip/impl/Distance.h>
@@ -31,7 +31,7 @@
 #include <faiss/hip/utils/DeviceTensor.h>
 
 #if defined USE_NVIDIA_RAFT
-#include <faiss/gpu/impl/RaftUtils.h>
+#include <faiss/hip/impl/RaftUtils.h>
 #include <raft/core/device_mdspan.hpp>
 #include <raft/core/device_resources.hpp>
 #include <raft/core/error.hpp>
@@ -44,7 +44,7 @@
 #endif
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 #if defined USE_NVIDIA_RAFT
 using namespace raft::distance;
@@ -558,5 +558,5 @@ void bruteForceKnn(
     bfKnn(res, args);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -5,19 +6,19 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <math_constants.h> // in CUDA SDK, for CUDART_NAN_F
-#include <faiss/gpu/impl/VectorResidual.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <hip/hip_math_constants.h> // in HIP SDK, for HIP_NAN_F
+#include <faiss/hip/impl/VectorResidual.h>
+#include <faiss/hip/utils/ConversionOperators.h>
+#include <faiss/hip/utils/Tensor.h>
 
 #include <algorithm>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename CentroidT, bool LargeDim>
 __global__ void calcResidual(
@@ -34,10 +35,10 @@ __global__ void calcResidual(
     if (centroidId == -1) {
         if (LargeDim) {
             for (idx_t i = threadIdx.x; i < vecs.getSize(1); i += blockDim.x) {
-                residual[i] = CUDART_NAN_F;
+                residual[i] = HIP_NAN_F;
             }
         } else {
-            residual[threadIdx.x] = CUDART_NAN_F;
+            residual[threadIdx.x] = HIP_NAN_F;
         }
 
         return;
@@ -211,5 +212,5 @@ void runReconstruct(
     gatherReconstructByRange<half>(start, num, vecs, out, stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

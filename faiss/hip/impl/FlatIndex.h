@@ -23,12 +23,12 @@
 #pragma once
 
 #include <faiss/MetricType.h>
-#include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/hip/GpuResources.h>
+#include <faiss/hip/utils/DeviceTensor.h>
+#include <faiss/hip/utils/DeviceVector.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 class GpuResources;
 
@@ -128,5 +128,5 @@ class FlatIndex {
     DeviceTensor<float, 1, true> norms_;
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <assert.h>
-#include <hip/hip_runtime_api.h>
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <faiss/Index.h> // idx_t
 #include <stdint.h>

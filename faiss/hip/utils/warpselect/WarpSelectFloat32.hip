@@ -10,8 +10,8 @@
 namespace faiss {
 namespace hip {
 
-WARP_SELECT_IMPL(float, true, 32, 2);
-WARP_SELECT_IMPL(float, false, 32, 2);
+//WARP_SELECT_IMPL(float, true, 32, 2);
+//WARP_SELECT_IMPL(float, false, 32, 2);
 
 } // namespace hip
 } // namespace faiss

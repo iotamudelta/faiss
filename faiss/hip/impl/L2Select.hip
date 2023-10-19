@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -7,19 +8,19 @@
  */
 
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/L2Select.cuh>
+#include <faiss/hip/impl/L2Select.h>
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/Pair.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
-#include <faiss/gpu/utils/Select.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/MathOperators.h>
+#include <faiss/hip/utils/Pair.h>
+#include <faiss/hip/utils/Reductions.h>
+#include <faiss/hip/utils/Select.h>
+#include <faiss/hip/utils/Tensor.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // L2 + select kernel for k == 1, implements re-use of ||c||^2
 template <typename T, int kRowsPerBlock, int kBlockSize>
@@ -242,9 +243,9 @@ void runL2SelectMin(
     } while (false)
 
         // block size 128 for everything <= 1024
-        if (k <= 32) {
+        /*if (k <= 32) {
             RUN_L2_SELECT(128, 32, 2);
-        } else if (k <= 64) {
+        } else*/ if (k <= 64) {
             RUN_L2_SELECT(128, 64, 3);
         } else if (k <= 128) {
             RUN_L2_SELECT(128, 128, 3);
@@ -287,5 +288,5 @@ void runL2SelectMin(
             stream);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -9,11 +9,6 @@
 
 #include <faiss/hip/utils/Float16.h>
 
-#ifndef __HALF2_TO_UI
-// cuda_fp16.hpp doesn't export this
-#define __HALF2_TO_UI(var) *(reinterpret_cast<unsigned int*>(&(var)))
-#endif
-
 //
 // Templated wrappers to express load/store for different scalar and vector
 // types, so kernels can have the same written form but can operate
@@ -38,26 +33,30 @@ template <>
 struct LoadStore<Half4> {
     static inline __device__ Half4 load(void* p) {
         Half4 out;
-#if CUDA_VERSION >= 9000
-//XXX        asm("ld.global.v2.u32 {%0, %1}, [%2];"
-//XXX            : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
-//XXX            : "l"(p));
-#else
-//XXX        asm("ld.global.v2.u32 {%0, %1}, [%2];"
-//XXX            : "=r"(out.a.x), "=r"(out.b.x)
-//XXX            : "l"(p));
-#endif
+        out.a.x = *(unsigned short*)p;
+        out.b.x = *(unsigned short*)p;
+
+    //DONE        asm("ld.global.v2.u32 {%0, %1}, [%2];"
+    //DONE            : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
+    //DONE            : "l"(p));
+
+    //DONE        asm("ld.global.v2.u32 {%0, %1}, [%2];"
+    //DONE            : "=r"(out.a.x), "=r"(out.b.x)
+    //DONE             : "l"(p));
+
         return out;
     }
 
     static inline __device__ void store(void* p, Half4& v) {
-#if CUDA_VERSION >= 9000
-//XXX        asm("st.v2.u32 [%0], {%1, %2};"
-//XXX            :
-//XXX            : "l"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
-#else
-//XXX        asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
-#endif
+    v.a.x = *(unsigned short*)p;
+    v.b.x = *(unsigned short*)p;
+//#if CUDA_VERSION >= 9000
+//DONE        asm("st.v2.u32 [%0], {%1, %2};"
+//DONE            :
+//DONE            : "l"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
+//#else
+//DONE        asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
+//#endif
     }
 };
 
@@ -65,35 +64,43 @@ template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
         Half8 out;
-#if CUDA_VERSION >= 9000
-//XXX        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
-//XXX            : "=r"(__HALF2_TO_UI(out.a.a)),
-//XXX              "=r"(__HALF2_TO_UI(out.a.b)),
-//XXX              "=r"(__HALF2_TO_UI(out.b.a)),
-//XXX              "=r"(__HALF2_TO_UI(out.b.b))
-//XXX            : "l"(p));
-#else
-//XXX        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
-//XXX            : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-//XXX            : "l"(p));
-#endif
+        out.a.a.x = *(unsigned short*)p;
+        out.a.b.x = *(unsigned short*)p;
+        out.b.a.x = *(unsigned short*)p;
+        out.b.b.x = *(unsigned short*)p;
+//#if CUDA_VERSION >= 9000
+//DONE        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
+//DONE            : "=r"(__HALF2_TO_UI(out.a.a)),
+//DONE              "=r"(__HALF2_TO_UI(out.a.b)),
+//DONE              "=r"(__HALF2_TO_UI(out.b.a)),
+//DONE              "=r"(__HALF2_TO_UI(out.b.b))
+//DONE            : "l"(p));
+//#else
+//DONE        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
+//DONE            : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
+//DONE            : "l"(p));
+//#endif
         return out;
     }
 
     static inline __device__ void store(void* p, Half8& v) {
-#if CUDA_VERSION >= 9000
-//XXX        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
-//XXX            :
-//XXX            : "l"(p),
-//XXX              "r"(__HALF2_TO_UI(v.a.a)),
-//XXX              "r"(__HALF2_TO_UI(v.a.b)),
-//XXX              "r"(__HALF2_TO_UI(v.b.a)),
-//XXX              "r"(__HALF2_TO_UI(v.b.b)));
-#else
-//XXX        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
-//XXX            :
-//XXX            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
-#endif
+    v.a.a.x = *(unsigned short*)p;
+    v.a.b.x = *(unsigned short*)p;
+    v.b.a.x = *(unsigned short*)p;
+    v.b.b.x = *(unsigned short*)p;
+//#if CUDA_VERSION >= 9000
+//DONE        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
+//DONE            :
+//DONE            : "l"(p),
+//DONE              "r"(__HALF2_TO_UI(v.a.a)),
+//DONE              "r"(__HALF2_TO_UI(v.a.b)),
+//DONE              "r"(__HALF2_TO_UI(v.b.a)),
+//DONE              "r"(__HALF2_TO_UI(v.b.b)));
+//#else
+//DONE        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
+//DONE            :
+//DONE            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
+//#endif
     }
 };
 

@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/blockselect/BlockSelectImpl.cuh>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/blockselect/BlockSelectImpl.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // warp Q to thread Q:
 // 1, 1
@@ -55,8 +55,8 @@ void runBlockSelect(
     if (dir) {
         if (k == 1) {
             BLOCK_SELECT_CALL(float, true, 1);
-        } else if (k <= 32) {
-            BLOCK_SELECT_CALL(float, true, 32);
+        //} else if (k <= 32) {
+        //    BLOCK_SELECT_CALL(float, true, 32);
         } else if (k <= 64) {
             BLOCK_SELECT_CALL(float, true, 64);
         } else if (k <= 128) {
@@ -75,8 +75,8 @@ void runBlockSelect(
     } else {
         if (k == 1) {
             BLOCK_SELECT_CALL(float, false, 1);
-        } else if (k <= 32) {
-            BLOCK_SELECT_CALL(float, false, 32);
+        //} else if (k <= 32) {
+        //    BLOCK_SELECT_CALL(float, false, 32);
         } else if (k <= 64) {
             BLOCK_SELECT_CALL(float, false, 64);
         } else if (k <= 128) {
@@ -108,8 +108,8 @@ void runBlockSelectPair(
     if (dir) {
         if (k == 1) {
             BLOCK_SELECT_PAIR_CALL(float, true, 1);
-        } else if (k <= 32) {
-            BLOCK_SELECT_PAIR_CALL(float, true, 32);
+        //} else if (k <= 32) {
+        //    BLOCK_SELECT_PAIR_CALL(float, true, 32);
         } else if (k <= 64) {
             BLOCK_SELECT_PAIR_CALL(float, true, 64);
         } else if (k <= 128) {
@@ -128,8 +128,8 @@ void runBlockSelectPair(
     } else {
         if (k == 1) {
             BLOCK_SELECT_PAIR_CALL(float, false, 1);
-        } else if (k <= 32) {
-            BLOCK_SELECT_PAIR_CALL(float, false, 32);
+        //} else if (k <= 32) {
+        //    BLOCK_SELECT_PAIR_CALL(float, false, 32);
         } else if (k <= 64) {
             BLOCK_SELECT_PAIR_CALL(float, false, 64);
         } else if (k <= 128) {
@@ -148,5 +148,5 @@ void runBlockSelectPair(
     }
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

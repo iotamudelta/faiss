@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
@@ -125,20 +126,21 @@ int getDeviceForAddress(const void* p) {
     }
 
     // memoryType is deprecated for CUDA 10.0+
-#if CUDA_VERSION < 10000
+//#if CUDA_VERSION < 10000
+    //TODO this enum is different for hip vs cuda, might need to adjust
     if (att.memoryType == hipMemoryTypeHost) {
         return -1;
     } else {
         return att.device;
     }
-#else
+/*#else
     // FIXME: what to use for managed memory?
     if (att.type == hipMemoryTypeDevice) {
         return att.device;
     } else {
         return -1;
     }
-#endif
+//#endif*/
 }
 
 bool getFullUnifiedMemSupport(int device) {
@@ -213,6 +215,7 @@ CublasHandleScope::~CublasHandleScope() {
 CudaEvent::CudaEvent(hipStream_t stream, bool timer) : event_(0) {
     CUDA_VERIFY(hipEventCreateWithFlags(
             &event_, timer ? hipEventDefault : hipEventDisableTiming));
+    printf("------------------hipEventRecord1");
     CUDA_VERIFY(hipEventRecord(event_, stream));
 }
 

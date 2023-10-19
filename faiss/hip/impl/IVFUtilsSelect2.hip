@@ -1,3 +1,4 @@
+#include "hip/hip_runtime_api.h"
 #include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6,13 +7,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Limits.cuh>
-#include <faiss/gpu/utils/Select.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/hip/utils/DeviceUtils.h>
+#include <faiss/hip/utils/StaticUtils.h>
+#include <faiss/hip/impl/IVFUtils.h>
+#include <faiss/hip/utils/DeviceDefs.h>
+#include <faiss/hip/utils/Limits.h>
+#include <faiss/hip/utils/Select.h>
+#include <faiss/hip/utils/Tensor.h>
 
 //
 // This kernel is split into a separate compilation unit to cut down
@@ -20,7 +21,7 @@
 //
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // This is warp divergence central, but this is really a final step
 // and happening a small number of times
@@ -192,8 +193,8 @@ void runPass2SelectLists(
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \
-        } else if (k <= 32) {                     \
-            RUN_PASS(INDEX_T, 128, 32, 2, DIR);   \
+        /*} else if (k <= 32) {                  */   \
+        /*    RUN_PASS(INDEX_T, 128, 32, 2, DIR);*/   \
         } else if (k <= 64) {                     \
             RUN_PASS(INDEX_T, 128, 64, 3, DIR);   \
         } else if (k <= 128) {                    \
@@ -215,8 +216,8 @@ void runPass2SelectLists(
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \
-        } else if (k <= 32) {                     \
-            RUN_PASS(INDEX_T, 128, 32, 2, DIR);   \
+        /*} else if (k <= 32) {                   */  \
+        /*    RUN_PASS(INDEX_T, 128, 32, 2, DIR); */  \
         } else if (k <= 64) {                     \
             RUN_PASS(INDEX_T, 128, 64, 3, DIR);   \
         } else if (k <= 128) {                    \
@@ -252,5 +253,5 @@ void runPass2SelectLists(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

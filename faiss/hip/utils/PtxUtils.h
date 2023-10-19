@@ -13,82 +13,38 @@
 namespace faiss {
 namespace hip {
 
-// defines to simplify the SASS assembly structure file/line in the profiler
-#define GET_BITFIELD_U32(OUT, VAL, POS, LEN) 
-//XXX	\
-//XXX    asm("bfe.u32 %0, %1, %2, %3;" : "=r"(OUT) : "r"(VAL), "r"(POS), "r"(LEN));
+__device__ __forceinline__ unsigned int
+BFE32(unsigned int val,
+    unsigned int pos,
+    unsigned int len)
+{
+    //static_assert(std::is_unsigned<UnsignedBits>::value, "UnsignedBits must be unsigned");
+    return __bitextract_u32(val, pos, len);
+    //return (static_cast<unsigned int>(source) << (32 - bit_start - num_bits)) >> (32 - num_bits);
+}
 
-#define GET_BITFIELD_U64(OUT, VAL, POS, LEN) 
-//XXX	\
-//XXX    asm("bfe.u64 %0, %1, %2, %3;" : "=l"(OUT) : "l"(VAL), "r"(POS), "r"(LEN));
+__device__ __forceinline__ uint64_t
+BFE64(uint64_t val,
+    unsigned int pos,
+    unsigned int len)
+{
+    //static_assert(std::is_unsigned<UnsignedBits>::value, "UnsignedBits must be unsigned");
+    return __bitextract_u64(val, pos, len);
+    //return (source << (64 - bit_start - num_bits)) >> (64 - num_bits);
+}
 
-__device__ __forceinline__ unsigned int getBitfield(
-        unsigned int val,
-        int pos,
-        int len) {
-    unsigned int ret;
-//XXX    asm("bfe.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(val), "r"(pos), "r"(len));
-    return ret;
+__device__ __forceinline__ unsigned int
+getBitfield(unsigned int val, int pos,int len) {
+    return BFE32(val, pos, len);
 }
 
 __device__ __forceinline__ uint64_t
 getBitfield(uint64_t val, int pos, int len) {
-    uint64_t ret;
-//XXX    asm("bfe.u64 %0, %1, %2, %3;" : "=l"(ret) : "l"(val), "r"(pos), "r"(len));
-    return ret;
-}
-
-__device__ __forceinline__ unsigned int setBitfield(
-        unsigned int val,
-        unsigned int toInsert,
-        int pos,
-        int len) {
-    unsigned int ret;
-//XXX    asm("bfi.b32 %0, %1, %2, %3, %4;"
-//XXX        : "=r"(ret)
-//XXX        : "r"(toInsert), "r"(val), "r"(pos), "r"(len));
-    return ret;
+    return BFE64(val, pos, len);
 }
 
 __device__ __forceinline__ int getLaneId() {
-    int laneId;
-//XXX   asm("mov.u32 %0, %%laneid;" : "=r"(laneId));
-    return laneId;
-}
-
-__device__ __forceinline__ unsigned getLaneMaskLt() {
-    unsigned mask;
-//XXX    asm("mov.u32 %0, %%lanemask_lt;" : "=r"(mask));
-    return mask;
-}
-
-__device__ __forceinline__ unsigned getLaneMaskLe() {
-    unsigned mask;
-//XXX    asm("mov.u32 %0, %%lanemask_le;" : "=r"(mask));
-    return mask;
-}
-
-__device__ __forceinline__ unsigned getLaneMaskGt() {
-    unsigned mask;
-//XXX    asm("mov.u32 %0, %%lanemask_gt;" : "=r"(mask));
-    return mask;
-}
-
-__device__ __forceinline__ unsigned getLaneMaskGe() {
-    unsigned mask;
-//XXX    asm("mov.u32 %0, %%lanemask_ge;" : "=r"(mask));
-    return mask;
-}
-
-__device__ __forceinline__ void namedBarrierWait(int name, int numThreads) {
-//XXX    asm volatile("bar.sync %0, %1;" : : "r"(name), "r"(numThreads) : "memory");
-}
-
-__device__ __forceinline__ void namedBarrierArrived(int name, int numThreads) {
-//XXX    asm volatile("bar.arrive %0, %1;"
-//XXX                 :
-//XXX                 : "r"(name), "r"(numThreads)
-//XXX                 : "memory");
+    return threadIdx.x & 63;
 }
 
 } // namespace hip

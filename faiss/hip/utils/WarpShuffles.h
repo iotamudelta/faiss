@@ -6,12 +6,12 @@
  */
 
 #pragma once
-
 #include <hip/hip_runtime.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
+#include <hip/hip_runtime_api.h>
+#include <faiss/hip/utils/DeviceDefs.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // defines to simplify the SASS assembly structure file/line in the profiler
 #if CUDA_VERSION >= 9000
@@ -86,23 +86,23 @@ inline __device__ T* shfl_xor(
     return (T*)shfl_xor(v, laneMask, width);
 }
 
-inline __device__ half shfl(half v, int srcLane, int width = kWarpSize) {
+inline __device__ half shfl(__half_raw v, int srcLane, int width = kWarpSize) {
     unsigned int vu = v.x;
     vu = __shfl(vu, srcLane, width);
 
-    half h;
+    __half_raw h;
     h.x = (unsigned short)vu;
-    return h;
+    return __half(h);
 }
 
-inline __device__ half shfl_xor(half v, int laneMask, int width = kWarpSize) {
+inline __device__ half shfl_xor(__half_raw v, int laneMask, int width = kWarpSize) {
     unsigned int vu = v.x;
     vu = __shfl_xor(vu, laneMask, width);
 
-    half h;
+    __half_raw h;
     h.x = (unsigned short)vu;
-    return h;
+    return __half(h);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
 #include <faiss/hip/utils/DeviceDefs.h>
@@ -16,7 +17,7 @@
 #include <faiss/hip/utils/WarpShuffles.h>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 // Merge pairs of lists smaller than blockDim.x (NumThreads)
 template <
@@ -121,7 +122,7 @@ template <
         bool FullMerge>
 inline __device__ void blockMergeLarge(K* listK, V* listV) {
     static_assert(utils::isPowerOf2(L), "L must be a power-of-2");
-    static_assert(L >= kWarpSize, "merge list size must be >= 32");
+    static_assert(L >= kWarpSize, "merge list size must be >= 64");
     static_assert(
             utils::isPowerOf2(NumThreads), "NumThreads must be a power-of-2");
     static_assert(L >= NumThreads, "merge list size must be >= NumThreads");
@@ -317,5 +318,5 @@ inline __device__ void blockMerge(K* listK, V* listV) {
             FullMerge>::merge(listK, listV);
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

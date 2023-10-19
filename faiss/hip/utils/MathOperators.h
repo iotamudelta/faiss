@@ -17,7 +17,7 @@
 //
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct Math {
@@ -285,9 +285,9 @@ struct Math<half> {
 #if CUDA_VERSION >= 9000
         return 0;
 #else
-        half h;
+        __half_raw h;
         h.x = 0;
-        return h;
+        return __half(h);
 #endif
     }
 };
@@ -556,5 +556,5 @@ struct Math<Half8> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

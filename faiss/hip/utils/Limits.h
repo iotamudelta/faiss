@@ -11,7 +11,7 @@
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
 struct Limits {};
@@ -33,15 +33,9 @@ struct Limits<float> {
 };
 
 inline __device__ __host__ half kGetHalf(unsigned short v) {
-#if CUDA_VERSION >= 9000
     __half_raw h;
     h.x = v;
     return __half(h);
-#else
-    half h;
-    h.x = v;
-    return h;
-#endif
 }
 
 template <>
@@ -91,5 +85,5 @@ struct Limits<Pair<K, V>> {
     }
 };
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

@@ -7,26 +7,27 @@
 
 #pragma once
 
-#include <hipblas.h>
+#include <hipblas/hipblas.h>
 #include <faiss/hip/utils/DeviceTensor.h>
 #include <faiss/hip/utils/Float16.h>
 #include <faiss/hip/utils/HostTensor.h>
 #include <faiss/hip/utils/Tensor.h>
+#include <hip/amd_detail/amd_hip_fp16.h>
 #include <limits>
 
 namespace faiss {
-namespace gpu {
+namespace hip {
 
 template <typename T>
-struct GetCudaType;
+struct GetHipType;
 
 template <>
-struct GetCudaType<float> {
+struct GetHipType<float> {
     static constexpr hipblasDatatype_t Type = HIPBLAS_R_32F;
 };
 
 template <>
-struct GetCudaType<half> {
+struct GetHipType<half> {
     static constexpr hipblasDatatype_t Type = HIPBLAS_R_16F;
 };
 
@@ -46,8 +47,8 @@ hipblasStatus_t rawGemm(
         const float fBeta,
         float* C,
         int ldc) {
-    auto cAT = GetCudaType<AT>::Type;
-    auto cBT = GetCudaType<BT>::Type;
+    auto cAT = GetHipType<AT>::Type;
+    auto cBT = GetHipType<BT>::Type;
 
     // FIXME: some weird CUDA 11 bug? where cublasSgemmEx on
     // f16 (8, 64) x f16 (64, 64)' = f32 (8, 64) returns "not supported".
@@ -56,33 +57,8 @@ hipblasStatus_t rawGemm(
     //
     // Only use the PEDANTIC implementation if the input matrices are f16
     // and we are on CUDA 11+
-#if CUDA_VERSION >= 11000
-    if (cAT == HIPBLAS_R_16F || cBT == HIPBLAS_R_16F) {
-        return hipblasGemmEx(
-                handle,
-                transa,
-                transb,
-                m,
-                n,
-                k,
-                &fAlpha,
-                A,
-                cAT,
-                lda,
-                B,
-                cBT,
-                ldb,
-                &fBeta,
-                C,
-                HIPBLAS_R_32F,
-                ldc,
-                CUBLAS_COMPUTE_32F_PEDANTIC,
-                HIPBLAS_GEMM_DEFAULT);
-    }
-#endif
 
-    // Always accumulate in f32
-    return cublasSgemmEx(
+    return hipblasGemmEx(
             handle,
             transa,
             transb,
@@ -99,7 +75,9 @@ hipblasStatus_t rawGemm(
             &fBeta,
             C,
             HIPBLAS_R_32F,
-            ldc);
+            ldc,
+            HIPBLAS_R_32F, //HIPBLAS_COMPUTE_32F_PEDANTIC,
+            HIPBLAS_GEMM_DEFAULT);
 }
 
 template <typename AT, typename BT>
@@ -122,8 +100,8 @@ hipblasStatus_t rawBatchGemm(
         int ldc,
         long long int strideC,
         int batchCount) {
-    auto cAT = GetCudaType<AT>::Type;
-    auto cBT = GetCudaType<BT>::Type;
+    auto cAT = GetHipType<AT>::Type;
+    auto cBT = GetHipType<BT>::Type;
 
     // Always accumulate in f32
     return hipblasGemmStridedBatchedEx(
@@ -380,5 +358,5 @@ void runBatchMatrixMult(
     CUDA_TEST_ERROR();
 }
 
-} // namespace gpu
+} // namespace hip
 } // namespace faiss

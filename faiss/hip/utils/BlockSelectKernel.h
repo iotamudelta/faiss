@@ -1,5 +1,3 @@
-#include "hip/hip_runtime_api.h"
-#include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -10,7 +8,8 @@
 #pragma once
 
 #include <faiss/hip/utils/Select.h>
-
+#include "hip/hip_runtime_api.h"
+#include "hip/hip_runtime.h"
 namespace faiss {
 namespace hip {
 

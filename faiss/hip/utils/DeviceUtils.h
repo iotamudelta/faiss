@@ -8,6 +8,7 @@
 #pragma once
 
 #include <hipblas/hipblas.h>
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <faiss/impl/FaissAssert.h>
 #include <vector>

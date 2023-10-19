@@ -17,6 +17,7 @@
 #include <faiss/hip/utils/DeviceTensor.h>
 #include <faiss/hip/utils/HostTensor.h>
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <gflags/gflags.h>
 #include <map>

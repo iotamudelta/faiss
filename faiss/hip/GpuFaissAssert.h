@@ -8,7 +8,8 @@
 #ifndef GPU_FAISS_ASSERT_INCLUDED
 #define GPU_FAISS_ASSERT_INCLUDED
 
-#include <hip_runtime_api.h>
+#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <faiss/impl/FaissAssert.h>
 
 ///

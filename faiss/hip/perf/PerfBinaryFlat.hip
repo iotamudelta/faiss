@@ -19,6 +19,7 @@
 #include <memory>
 #include <vector>
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 
 DEFINE_int32(k, 3, "final number of closest results returned");

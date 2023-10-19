@@ -11,6 +11,7 @@
 #include <faiss/hip/utils/DeviceTensor.h>
 #include <faiss/hip/utils/Float16.h>
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <thrust/execution_policy.h>
 #include <thrust/transform.h>

@@ -1,5 +1,3 @@
-#include "hip/hip_runtime_api.h"
-#include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -9,6 +7,7 @@
 
 #pragma once
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <faiss/hip/utils/DeviceUtils.h>
 #include <faiss/hip/utils/StaticUtils.h>

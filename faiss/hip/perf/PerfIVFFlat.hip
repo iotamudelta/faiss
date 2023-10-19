@@ -21,6 +21,7 @@
 #include <memory>
 #include <vector>
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 
 DEFINE_int32(nprobe, 5, "number of coarse centroids to probe");

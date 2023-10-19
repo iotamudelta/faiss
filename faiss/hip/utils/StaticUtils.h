@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <hip_runtime_api.h>
+#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 
 // allow usage for non-CUDA files
 #ifndef __host__

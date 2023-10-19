@@ -19,6 +19,7 @@
 #include <memory>
 #include <vector>
 
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 
 DEFINE_bool(l2, true, "L2 or inner product");

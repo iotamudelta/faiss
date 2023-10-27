@@ -45,7 +45,7 @@ struct LoadCode32<1> {
             uint8_t* p,
             int offset) {
         p += offset * 1;
-            code32[0] = p[0]; //TODO no idea if this is right
+            code32[0] = *p;
 //DONE        asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
@@ -57,7 +57,7 @@ struct LoadCode32<2> {
             uint8_t* p,
             int offset) {
         p += offset * 2;
-                    code32[0] = p[0]; //TODO no idea if this is right
+                code32[0] = *p;
 //DONE        asm("ld.global.cs.u16 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
@@ -78,12 +78,15 @@ struct LoadCode32<3> {
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 0];" : "=r"(a) : "l"(p));
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 1];" : "=r"(b) : "l"(p));
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 2];" : "=r"(c) : "l"(p));
-        a = p[0];
-        b = p[1];
-        c = p[2];
+        a = *p;
+        p += 1;
+        b = *p;
+        p += 1;
+        c = *p;
         // FIXME: this is also slow, since we have to recover the
         // individual bytes loaded
         code32[0] = (c << 16) | (b << 8) | a;
+        p -= 2;
     }
 };
 
@@ -94,7 +97,7 @@ struct LoadCode32<4> {
             uint8_t* p,
             int offset) {
         p += offset * 4;
-            code32[0] = p[0];
+        code32[0] = *p;
 //DONE        asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
@@ -109,8 +112,8 @@ struct LoadCode32<8> {
 //DONE        asm("ld.global.cs.v2.u32 {%0, %1}, [%2];"
 //DONE            : "=r"(code32[0]), "=r"(code32[1])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
+        code32[0] = *p;
+        code32[1] = *p;
     }
 };
 
@@ -126,9 +129,9 @@ struct LoadCode32<12> {
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
     }
 };
 
@@ -139,10 +142,10 @@ struct LoadCode32<16> {
             uint8_t* p,
             int offset) {
         p += offset * 16;
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
-        code32[3] = p[0];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
+        code32[3] = *p;
 //DONE        asm("ld.global.cs.v4.u32 {%0, %1, %2, %3}, [%4];"
 //DONE            : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
 //DONE            : "l"(p));
@@ -163,11 +166,16 @@ struct LoadCode32<20> {
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[1];
-        code32[2] = p[2];
-        code32[3] = p[3];
-        code32[4] = p[4];
+        code32[0] = *p;
+        p += 4;
+        code32[1] = *p;
+        p += 4;
+        code32[2] = *p;
+        p += 4;
+        code32[3] = *p;
+        p += 4;
+        code32[4] = *p;
+        p -= 16;
     }
 };
 
@@ -189,12 +197,15 @@ struct LoadCode32<24> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
 //DONE            : "=r"(code32[4]), "=r"(code32[5])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[1];
-        code32[3] = p[1];
-        code32[4] = p[2];
-        code32[5] = p[2];
+        code32[0] = *p;
+        code32[1] = *p;
+        p += 8;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 8;
+        code32[4] = *p;
+        code32[5] = *p;
+        p -= 16;
     }
 };
 
@@ -214,13 +225,20 @@ struct LoadCode32<28> {
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 20];" : "=r"(code32[5]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 24];" : "=r"(code32[6]) : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[1];
-        code32[2] = p[2];
-        code32[3] = p[3];
-        code32[4] = p[4];
-        code32[5] = p[5];
-        code32[6] = p[6];
+        code32[0] = *p;
+        p += 4;
+        code32[1] = *p;
+        p += 4;
+        code32[2] = *p;
+        p += 4;
+        code32[3] = *p;
+        p += 4;
+        code32[4] = *p;
+        p += 4;
+        code32[5] = *p;
+        p += 4;
+        code32[6] = *p;
+        p -= 24;
     }
 };
 
@@ -239,15 +257,16 @@ struct LoadCode32<32> {
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4 + 16];"
 //DONE            : "=r"(code32[4]), "=r"(code32[5]), "=r"(code32[6]), "=r"(code32[7])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
-        code32[3] = p[0];
-
-        code32[4] = p[1];
-        code32[5] = p[1];
-        code32[6] = p[1];
-        code32[7] = p[1];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 16;
+        code32[4] = *p;
+        code32[5] = *p;
+        code32[6] = *p;
+        code32[7] = *p;
+        p -= 16;
     }
 };
 
@@ -275,20 +294,21 @@ struct LoadCode32<40> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 32];"
 //DONE            : "=r"(code32[8]), "=r"(code32[9])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-
-        code32[2] = p[1];
-        code32[3] = p[1];
-
-        code32[4] = p[2];
-        code32[5] = p[2];
-
-        code32[6] = p[3];
-        code32[7] = p[3];
-
-        code32[8] = p[4];
-        code32[9] = p[4];
+        code32[0] = *p;
+        code32[1] = *p;
+        p += 8;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 8;
+        code32[4] = *p;
+        code32[5] = *p;
+        p += 8;
+        code32[6] = *p;
+        code32[7] = *p;
+        p += 8;
+        code32[8] = *p;
+        code32[9] = *p;
+        p -= 32;
     }
 };
 
@@ -313,20 +333,21 @@ struct LoadCode32<48> {
 //DONE              "=r"(code32[10]),
 //DONE              "=r"(code32[11])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
-        code32[3] = p[0];
-
-        code32[4] = p[1];
-        code32[5] = p[1];
-        code32[6] = p[1];
-        code32[7] = p[1];
-
-        code32[8] = p[2];
-        code32[9] = p[2];
-        code32[10] = p[2];
-        code32[11] = p[2];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 16;
+        code32[4] = *p;
+        code32[5] = *p;
+        code32[6] = *p;
+        code32[7] = *p;
+        p += 16;
+        code32[8] = *p;
+        code32[9] = *p;
+        code32[10] = *p;
+        code32[11] = *p;
+        p -= 32;
     }
 };
 
@@ -360,26 +381,27 @@ struct LoadCode32<56> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 48];"
 //DONE            : "=r"(code32[12]), "=r"(code32[13])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-
-        code32[2] = p[1];
-        code32[3] = p[1];
-
-        code32[4] = p[2];
-        code32[5] = p[2];
-
-        code32[6] = p[3];
-        code32[7] = p[3];
-
-        code32[8] = p[4];
-        code32[9] = p[4];
-
-        code32[10] = p[5];
-        code32[11] = p[5];
-
-        code32[12] = p[6];
-        code32[13] = p[6];
+        code32[0] = *p;
+        code32[1] = *p;
+        p += 8;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 8;
+        code32[4] = *p;
+        code32[5] = *p;
+        p += 8;
+        code32[6] = *p;
+        code32[7] = *p;
+        p += 8;
+        code32[8] = *p;
+        code32[9] = *p;
+        p += 8;
+        code32[10] = *p;
+        code32[11] = *p;
+        p += 8;
+        code32[12] = *p;
+        code32[13] = *p;
+        p -= 48;
     }
 };
 
@@ -410,25 +432,26 @@ struct LoadCode32<64> {
 //DONE              "=r"(code32[14]),
 //DONE              "=r"(code32[15])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
-        code32[3] = p[0];
-
-        code32[4] = p[1];
-        code32[5] = p[1];
-        code32[6] = p[1];
-        code32[7] = p[1];
-
-        code32[8] = p[2];
-        code32[9] = p[2];
-        code32[10] = p[2];
-        code32[11] = p[2];
-
-        code32[12] = p[3];
-        code32[13] = p[3];
-        code32[14] = p[3];
-        code32[15] = p[3];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 16;
+        code32[4] = *p;
+        code32[5] = *p;
+        code32[6] = *p;
+        code32[7] = *p;
+        p += 16;
+        code32[8] = *p;
+        code32[9] = *p;
+        code32[10] = *p;
+        code32[11] = *p;
+        p += 16;
+        code32[12] = *p;
+        code32[13] = *p;
+        code32[14] = *p;
+        code32[15] = *p;
+        p -= 48;
     }
 };
 
@@ -471,35 +494,36 @@ struct LoadCode32<96> {
 //DONE              "=r"(code32[22]),
 //DONE              "=r"(code32[23])
 //DONE            : "l"(p));
-        code32[0] = p[0];
-        code32[1] = p[0];
-        code32[2] = p[0];
-        code32[3] = p[0];
-
-        code32[4] = p[1];
-        code32[5] = p[1];
-        code32[6] = p[1];
-        code32[7] = p[1];
-
-        code32[8] = p[2];
-        code32[9] = p[2];
-        code32[10] = p[2];
-        code32[11] = p[2];
-
-        code32[12] = p[3];
-        code32[13] = p[3];
-        code32[14] = p[3];
-        code32[15] = p[3];
-
-        code32[16] = p[4];
-        code32[17] = p[4];
-        code32[18] = p[4];
-        code32[19] = p[4];
-
-        code32[20] = p[5];
-        code32[21] = p[5];
-        code32[22] = p[5];
-        code32[23] = p[5];
+        code32[0] = *p;
+        code32[1] = *p;
+        code32[2] = *p;
+        code32[3] = *p;
+        p += 16;
+        code32[4] = *p;
+        code32[5] = *p;
+        code32[6] = *p;
+        code32[7] = *p;
+        p += 16;
+        code32[8] = *p;
+        code32[9] = *p;
+        code32[10] = *p;
+        code32[11] = *p;
+        p += 16;
+        code32[12] = *p;
+        code32[13] = *p;
+        code32[14] = *p;
+        code32[15] = *p;
+        p += 16;
+        code32[16] = *p;
+        code32[17] = *p;
+        code32[18] = *p;
+        code32[19] = *p;
+        p += 16;
+        code32[20] = *p;
+        code32[21] = *p;
+        code32[22] = *p;
+        code32[23] = *p;
+        p -= 80;
     }
 };
 

@@ -353,6 +353,7 @@ void runMultiPassTile(
                         listLengths.data(),                    \
                         prefixSumOffsets,                      \
                         allDistances);                         \
+         HIP_TEST_ERROR();                                    \
     } while (0)
 
         if (useFloat16Lookup) {
@@ -424,6 +425,7 @@ void runMultiPassTile(
                         listLengths.data(),                             \
                         prefixSumOffsets,                               \
                         allDistances);                                  \
+         HIP_TEST_ERROR();                                             \
     } while (0)
 
 #define RUN_PQ(NUM_SUB_Q)                         \
@@ -493,7 +495,7 @@ void runMultiPassTile(
 #undef RUN_PQ_OPT
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 
     // k-select the output in chunks, to increase parallelism
     runPass1SelectLists(
@@ -624,9 +626,9 @@ void runPQScanMultiPassNoPrecomputed(
 
     // Make sure the element before prefixSumOffsets is 0, since we
     // depend upon simple, boundary-less indexing to get proper results
-    CUDA_VERIFY(hipMemsetAsync(
+    HIP_VERIFY(hipMemsetAsync(
             prefixSumOffsetSpace1.data(), 0, sizeof(idx_t), stream));
-    CUDA_VERIFY(hipMemsetAsync(
+    HIP_VERIFY(hipMemsetAsync(
             prefixSumOffsetSpace2.data(), 0, sizeof(idx_t), stream));
 
     idx_t codeDistanceTypeSize =

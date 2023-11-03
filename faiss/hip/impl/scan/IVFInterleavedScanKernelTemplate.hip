@@ -60,6 +60,7 @@ void IVFINT_RUN<
                     distanceTemp,
                     indicesTemp,
                     useResidual);
+    HIP_TEST_ERROR();
 
     runIVFInterleavedScan2(
             distanceTemp,

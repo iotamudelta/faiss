@@ -228,6 +228,7 @@ void runBinaryDistanceAnySize(
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
     }
 #endif
+    HIP_TEST_ERROR();
 }
 
 template <typename BinaryType, int ReductionLimit>
@@ -269,6 +270,7 @@ void runBinaryDistanceLimitSize(
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
     }
 #endif
+    HIP_TEST_ERROR();
 }
 
 void runBinaryDistance(

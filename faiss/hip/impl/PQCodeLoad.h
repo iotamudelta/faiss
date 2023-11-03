@@ -45,7 +45,10 @@ struct LoadCode32<1> {
             uint8_t* p,
             int offset) {
         p += offset * 1;
-            code32[0] = *p;
+        using T = uint8_t __attribute__((ext_vector_type(1)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
 //DONE        asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
@@ -57,7 +60,10 @@ struct LoadCode32<2> {
             uint8_t* p,
             int offset) {
         p += offset * 2;
-                code32[0] = *p;
+        using T = uint8_t __attribute__((ext_vector_type(2)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
 //DONE        asm("ld.global.cs.u16 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
@@ -69,24 +75,18 @@ struct LoadCode32<3> {
             uint8_t* p,
             int offset) {
         p += offset * 3;
-        unsigned int a;
-        unsigned int b;
-        unsigned int c;
+	using T = uint8_t __attribute__((ext_vector_type(3)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
 
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 0];" : "=r"(a) : "l"(p));
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 1];" : "=r"(b) : "l"(p));
 //DONE        asm("ld.global.cs.u8 {%0}, [%1 + 2];" : "=r"(c) : "l"(p));
-        a = *p;
-        p += 1;
-        b = *p;
-        p += 1;
-        c = *p;
         // FIXME: this is also slow, since we have to recover the
         // individual bytes loaded
-        code32[0] = (c << 16) | (b << 8) | a;
-        p -= 2;
     }
 };
 
@@ -97,8 +97,11 @@ struct LoadCode32<4> {
             uint8_t* p,
             int offset) {
         p += offset * 4;
-        code32[0] = *p;
-//DONE        asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
+        using T = uint32_t __attribute__((ext_vector_type(1)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
+	//DONE        asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
     }
 };
 
@@ -109,11 +112,13 @@ struct LoadCode32<8> {
             uint8_t* p,
             int offset) {
         p += offset * 8;
-//DONE        asm("ld.global.cs.v2.u32 {%0, %1}, [%2];"
+        using T = uint32_t __attribute__((ext_vector_type(2)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
+	//DONE        asm("ld.global.cs.v2.u32 {%0, %1}, [%2];"
 //DONE            : "=r"(code32[0]), "=r"(code32[1])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
     }
 };
 
@@ -124,14 +129,15 @@ struct LoadCode32<12> {
             uint8_t* p,
             int offset) {
         p += offset * 12;
+	using T = uint32_t __attribute__((ext_vector_type(3)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
     }
 };
 
@@ -142,10 +148,10 @@ struct LoadCode32<16> {
             uint8_t* p,
             int offset) {
         p += offset * 16;
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
-        code32[3] = *p;
+	using T = uint32_t __attribute__((ext_vector_type(4)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
 //DONE        asm("ld.global.cs.v4.u32 {%0, %1, %2, %3}, [%4];"
 //DONE            : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
 //DONE            : "l"(p));
@@ -159,23 +165,25 @@ struct LoadCode32<20> {
             uint8_t* p,
             int offset) {
         p += offset * 20;
-        // FIXME: this is a non-coalesced, unaligned, non-vectorized load
+        //using T = uint32_t __attribute__((ext_vector_type(1)));
+        code32[0] = __builtin_nontemporal_load(p);
+	code32[1] = __builtin_nontemporal_load(p + 4);
+        code32[2] = __builtin_nontemporal_load(p + 8);
+	code32[3] = __builtin_nontemporal_load(p + 12);
+	code32[4] = __builtin_nontemporal_load(p + 16);
+
+	// FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "l"(p));
-        code32[0] = *p;
-        p += 4;
-        code32[1] = *p;
-        p += 4;
-        code32[2] = *p;
-        p += 4;
-        code32[3] = *p;
-        p += 4;
-        code32[4] = *p;
-        p -= 16;
+        //code32[0] = p[0];
+        //code32[1] = p[1];
+        //code32[2] = p[2];
+        //code32[3] = p[3];
+        //code32[4] = p[4];
     }
 };
 
@@ -186,6 +194,10 @@ struct LoadCode32<24> {
             uint8_t* p,
             int offset) {
         p += offset * 24;
+	using T = uint32_t __attribute__((ext_vector_type(6)));
+	T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+	u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
@@ -197,15 +209,6 @@ struct LoadCode32<24> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
 //DONE            : "=r"(code32[4]), "=r"(code32[5])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        p += 8;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 8;
-        code32[4] = *p;
-        code32[5] = *p;
-        p -= 16;
     }
 };
 
@@ -216,6 +219,10 @@ struct LoadCode32<28> {
             uint8_t* p,
             int offset) {
         p += offset * 28;
+	using T = uint32_t __attribute__((ext_vector_type(7)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "l"(p));
@@ -225,20 +232,6 @@ struct LoadCode32<28> {
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 20];" : "=r"(code32[5]) : "l"(p));
 //DONE        asm(LD_NC_V1 " {%0}, [%1 + 24];" : "=r"(code32[6]) : "l"(p));
-        code32[0] = *p;
-        p += 4;
-        code32[1] = *p;
-        p += 4;
-        code32[2] = *p;
-        p += 4;
-        code32[3] = *p;
-        p += 4;
-        code32[4] = *p;
-        p += 4;
-        code32[5] = *p;
-        p += 4;
-        code32[6] = *p;
-        p -= 24;
     }
 };
 
@@ -249,6 +242,10 @@ struct LoadCode32<32> {
             uint8_t* p,
             int offset) {
         p += offset * 32;
+	using T = uint32_t __attribute__((ext_vector_type(8)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -257,16 +254,6 @@ struct LoadCode32<32> {
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4 + 16];"
 //DONE            : "=r"(code32[4]), "=r"(code32[5]), "=r"(code32[6]), "=r"(code32[7])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 16;
-        code32[4] = *p;
-        code32[5] = *p;
-        code32[6] = *p;
-        code32[7] = *p;
-        p -= 16;
     }
 };
 
@@ -277,6 +264,10 @@ struct LoadCode32<40> {
             uint8_t* p,
             int offset) {
         p += offset * 40;
+	using T = uint32_t __attribute__((ext_vector_type(10)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
@@ -294,21 +285,6 @@ struct LoadCode32<40> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 32];"
 //DONE            : "=r"(code32[8]), "=r"(code32[9])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        p += 8;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 8;
-        code32[4] = *p;
-        code32[5] = *p;
-        p += 8;
-        code32[6] = *p;
-        code32[7] = *p;
-        p += 8;
-        code32[8] = *p;
-        code32[9] = *p;
-        p -= 32;
     }
 };
 
@@ -319,6 +295,10 @@ struct LoadCode32<48> {
             uint8_t* p,
             int offset) {
         p += offset * 48;
+	using T = uint32_t __attribute__((ext_vector_type(12)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -333,21 +313,6 @@ struct LoadCode32<48> {
 //DONE              "=r"(code32[10]),
 //DONE              "=r"(code32[11])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 16;
-        code32[4] = *p;
-        code32[5] = *p;
-        code32[6] = *p;
-        code32[7] = *p;
-        p += 16;
-        code32[8] = *p;
-        code32[9] = *p;
-        code32[10] = *p;
-        code32[11] = *p;
-        p -= 32;
     }
 };
 
@@ -358,6 +323,10 @@ struct LoadCode32<56> {
             uint8_t* p,
             int offset) {
         p += offset * 56;
+	using T = uint32_t __attribute__((ext_vector_type(14)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
@@ -381,27 +350,6 @@ struct LoadCode32<56> {
 //DONE        asm(LD_NC_V2 " {%0, %1}, [%2 + 48];"
 //DONE            : "=r"(code32[12]), "=r"(code32[13])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        p += 8;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 8;
-        code32[4] = *p;
-        code32[5] = *p;
-        p += 8;
-        code32[6] = *p;
-        code32[7] = *p;
-        p += 8;
-        code32[8] = *p;
-        code32[9] = *p;
-        p += 8;
-        code32[10] = *p;
-        code32[11] = *p;
-        p += 8;
-        code32[12] = *p;
-        code32[13] = *p;
-        p -= 48;
     }
 };
 
@@ -412,6 +360,10 @@ struct LoadCode32<64> {
             uint8_t* p,
             int offset) {
         p += offset * 64;
+	using T = uint32_t __attribute__((ext_vector_type(16)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -432,26 +384,6 @@ struct LoadCode32<64> {
 //DONE              "=r"(code32[14]),
 //DONE              "=r"(code32[15])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 16;
-        code32[4] = *p;
-        code32[5] = *p;
-        code32[6] = *p;
-        code32[7] = *p;
-        p += 16;
-        code32[8] = *p;
-        code32[9] = *p;
-        code32[10] = *p;
-        code32[11] = *p;
-        p += 16;
-        code32[12] = *p;
-        code32[13] = *p;
-        code32[14] = *p;
-        code32[15] = *p;
-        p -= 48;
     }
 };
 
@@ -462,6 +394,10 @@ struct LoadCode32<96> {
             uint8_t* p,
             int offset) {
         p += offset * 96;
+	using T = uint32_t __attribute__((ext_vector_type(24)));
+        T* t = reinterpret_cast<T*>(p);
+        T* u = reinterpret_cast<T*>(code32);
+        u[0] = __builtin_nontemporal_load(t);
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
 //DONE        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -494,36 +430,6 @@ struct LoadCode32<96> {
 //DONE              "=r"(code32[22]),
 //DONE              "=r"(code32[23])
 //DONE            : "l"(p));
-        code32[0] = *p;
-        code32[1] = *p;
-        code32[2] = *p;
-        code32[3] = *p;
-        p += 16;
-        code32[4] = *p;
-        code32[5] = *p;
-        code32[6] = *p;
-        code32[7] = *p;
-        p += 16;
-        code32[8] = *p;
-        code32[9] = *p;
-        code32[10] = *p;
-        code32[11] = *p;
-        p += 16;
-        code32[12] = *p;
-        code32[13] = *p;
-        code32[14] = *p;
-        code32[15] = *p;
-        p += 16;
-        code32[16] = *p;
-        code32[17] = *p;
-        code32[18] = *p;
-        code32[19] = *p;
-        p += 16;
-        code32[20] = *p;
-        code32[21] = *p;
-        code32[22] = *p;
-        code32[23] = *p;
-        p -= 80;
     }
 };
 

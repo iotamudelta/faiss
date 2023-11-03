@@ -181,7 +181,7 @@ __host__ DeviceTensor<T, Dim, InnerContig, IndexT, PtrTraits>& DeviceTensor<
         // Region must be contiguous
         FAISS_ASSERT(this->isContiguous());
 
-        CUDA_VERIFY(hipMemsetAsync(
+        HIP_VERIFY(hipMemsetAsync(
                 this->data_, 0, this->getSizeInBytes(), stream));
     }
 

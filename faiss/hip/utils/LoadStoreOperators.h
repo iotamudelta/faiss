@@ -33,9 +33,9 @@ template <>
 struct LoadStore<Half4> {
     static inline __device__ Half4 load(void* p) {
         Half4 out;
-        out.a.x = *static_cast<unsigned short*>(p);
-        out.b.x = *static_cast<unsigned short*>(p);
-
+        half2* t = reinterpret_cast<half2*>(p);
+        out.a = t[0];
+	out.b = t[1];
     //DONE        asm("ld.global.v2.u32 {%0, %1}, [%2];"
     //DONE            : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
     //DONE            : "l"(p));
@@ -48,8 +48,9 @@ struct LoadStore<Half4> {
     }
 
     static inline __device__ void store(void* p, Half4& v) {
-    v.a.x = *static_cast<unsigned short*>(p);
-    v.b.x = *static_cast<unsigned short*>(p);
+        half2* t = reinterpret_cast<half2*>(p);
+        v.a = t[0];
+        v.b = t[1];
 //#if CUDA_VERSION >= 9000
 //DONE        asm("st.v2.u32 [%0], {%1, %2};"
 //DONE            :
@@ -64,10 +65,11 @@ template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
         Half8 out;
-        out.a.a.x = *static_cast<unsigned short*>(p);
-        out.a.b.x = *static_cast<unsigned short*>(p);
-        out.b.a.x = *static_cast<unsigned short*>(p);
-        out.b.b.x = *static_cast<unsigned short*>(p);
+	half2* t = reinterpret_cast<half2*>(p);
+        out.a.a = t[0];
+        out.a.b = t[1];
+        out.b.a = t[2];
+	out.b.b = t[3];
 //#if CUDA_VERSION >= 9000
 //DONE        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
 //DONE            : "=r"(__HALF2_TO_UI(out.a.a)),
@@ -84,10 +86,11 @@ struct LoadStore<Half8> {
     }
 
     static inline __device__ void store(void* p, Half8& v) {
-    v.a.a.x = *static_cast<unsigned short*>(p);
-    v.a.b.x = *static_cast<unsigned short*>(p);
-    v.b.a.x = *static_cast<unsigned short*>(p);
-    v.b.b.x = *static_cast<unsigned short*>(p);
+        half2* t = reinterpret_cast<half2*>(p);
+        v.a.a = t[0];
+        v.a.b = t[1];
+        v.b.a = t[2];
+        v.b.b = t[3];
 //#if CUDA_VERSION >= 9000
 //DONE        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
 //DONE            :

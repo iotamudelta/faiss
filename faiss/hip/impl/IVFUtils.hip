@@ -62,7 +62,7 @@ void runCalcListOffsets(
 
     getResultLengths<<<grid, block, 0, stream>>>(
             ivfListIds, listLengths.data(), totalSize, prefixSumOffsets);
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 
     // Prefix sum of the indices, so we know where the intermediate
     // results should be maintained
@@ -76,7 +76,7 @@ void runCalcListOffsets(
             prefixSumOffsets.data(),
             prefixSumOffsets.data() + totalSize,
             prefixSumOffsets.data());
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

@@ -252,7 +252,7 @@ void runMatrixMult(
             lda,
             ldb,
             ldc);
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 template <typename AT, typename BT>
@@ -355,7 +355,7 @@ void runBatchMatrixMult(
             err == HIPBLAS_STATUS_SUCCESS,
             "hipblasGemmStridedBatchedEx failed (%d)",
             (int)err);
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

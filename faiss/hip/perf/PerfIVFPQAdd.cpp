@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
     }
 
     cudaDeviceSynchronize();
-    CUDA_VERIFY(cudaProfilerStart());
+    HIP_VERIFY(cudaProfilerStart());
 
     float totalGpuTime = 0.0f;
     float totalCpuTime = 0.0f;
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         if (FLAGS_time_gpu) {
             faiss::hip::CpuTimer timer;
             gpuIndex.add(FLAGS_batch_size, addVecs.data());
-            CUDA_VERIFY(cudaDeviceSynchronize());
+            HIP_VERIFY(cudaDeviceSynchronize());
             auto time = timer.elapsedMilliseconds();
 
             totalGpuTime += time;
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    CUDA_VERIFY(cudaProfilerStop());
+    HIP_VERIFY(cudaProfilerStop());
 
     int total = FLAGS_batch_size * FLAGS_batches;
 

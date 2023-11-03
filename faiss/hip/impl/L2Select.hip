@@ -215,6 +215,7 @@ void runL2SelectMin(
                         centroidDistances,
                         outDistances,
                         outIndices);
+        HIP_TEST_ERROR();
     } else {
         auto grid = dim3(outDistances.getSize(0));
 
@@ -240,6 +241,7 @@ void runL2SelectMin(
         } else {                                                 \
             L2_KERNEL(int32_t, BLOCK, NUM_WARP_Q, NUM_THREAD_Q); \
         }                                                        \
+        HIP_TEST_ERROR();                                       \
     } while (false)
 
         // block size 128 for everything <= 1024
@@ -269,7 +271,7 @@ void runL2SelectMin(
 #undef L2_KERNEL
 #undef RUN_L2_SELECT
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runL2SelectMin(

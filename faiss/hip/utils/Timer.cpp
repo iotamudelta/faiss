@@ -15,25 +15,25 @@ namespace hip {
 
 KernelTimer::KernelTimer(hipStream_t stream)
         : startEvent_(0), stopEvent_(0), stream_(stream), valid_(true) {
-    CUDA_VERIFY(hipEventCreate(&startEvent_));
-    CUDA_VERIFY(hipEventCreate(&stopEvent_));
+    HIP_VERIFY(hipEventCreate(&startEvent_));
+    HIP_VERIFY(hipEventCreate(&stopEvent_));
 
-    CUDA_VERIFY(hipEventRecord(startEvent_, stream_));
+    HIP_VERIFY(hipEventRecord(startEvent_, stream_));
 }
 
 KernelTimer::~KernelTimer() {
-    CUDA_VERIFY(hipEventDestroy(startEvent_));
-    CUDA_VERIFY(hipEventDestroy(stopEvent_));
+    HIP_VERIFY(hipEventDestroy(startEvent_));
+    HIP_VERIFY(hipEventDestroy(stopEvent_));
 }
 
 float KernelTimer::elapsedMilliseconds() {
     FAISS_ASSERT(valid_);
 
-    CUDA_VERIFY(hipEventRecord(stopEvent_, stream_));
-    CUDA_VERIFY(hipEventSynchronize(stopEvent_));
+    HIP_VERIFY(hipEventRecord(stopEvent_, stream_));
+    HIP_VERIFY(hipEventSynchronize(stopEvent_));
 
     auto time = 0.0f;
-    CUDA_VERIFY(hipEventElapsedTime(&time, startEvent_, stopEvent_));
+    HIP_VERIFY(hipEventElapsedTime(&time, startEvent_, stopEvent_));
     valid_ = false;
 
     return time;

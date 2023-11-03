@@ -71,7 +71,7 @@ void runUpdateListPointers(
             listCodes.data(),
             listIndices.data());
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 // Appends new indices for vectors being added to the IVF indices lists
@@ -124,7 +124,7 @@ void runIVFIndicesAppend(
         ivfIndicesAppend<<<blocks, threads, 0, stream>>>(
                 listIds, listOffset, indices, opt, listIndices.data());
 
-        CUDA_TEST_ERROR();
+        HIP_TEST_ERROR();
     }
 }
 
@@ -259,7 +259,7 @@ void runIVFFlatAppend(
         }
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 
 #undef RUN_APPEND
 }
@@ -308,7 +308,7 @@ void runIVFPQAppend(
     ivfpqAppend<<<threads, blocks, 0, stream>>>(
             listIds, listOffset, encodings, listCodes.data());
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 //
@@ -341,6 +341,7 @@ void runSQEncode(
     idx_t blocks = vecs.getSize(0);
 
     sqEncode<<<blocks, threads, 0, stream>>>(vecs, encodedVecs, codec);
+    HIP_TEST_ERROR();
 }
 
 // Handles appending encoded vectors (one per EncodeT word) packed into
@@ -584,7 +585,7 @@ void runIVFFlatInterleavedAppend(
     }
 
 #undef RUN_APPEND
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runIVFPQInterleavedAppend(
@@ -640,7 +641,7 @@ void runIVFPQInterleavedAppend(
     }
 
 #undef RUN_APPEND
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

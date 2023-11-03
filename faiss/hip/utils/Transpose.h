@@ -79,17 +79,13 @@ template <typename T, int DimInput, int DimOutput>
 __global__ void transposeAny(
         TensorInfo<T> input,
         TensorInfo<T> output,
-        idx_t totalSize) {
+        idx_t totalSize) __attribute__((amdgpu_flat_work_group_size(1,1024))) {
     for (idx_t i = idx_t(blockIdx.x) * blockDim.x + threadIdx.x; i < totalSize;
          i += gridDim.x * blockDim.x) {
         auto inputOffset = TensorInfoOffset<T, DimInput>::get(input, i);
         auto outputOffset = TensorInfoOffset<T, DimOutput>::get(output, i);
 
-#if __CUDA_ARCH__ >= 350
         output.data[outputOffset] = __ldg(&input.data[inputOffset]);
-#else
-        output.data[outputOffset] = input.data[inputOffset];
-#endif
     }
 }
 
@@ -187,7 +183,7 @@ void runTransposeAny(
                 <<<grid, block, 0, stream>>>(inInfo, outInfo, totalSize);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

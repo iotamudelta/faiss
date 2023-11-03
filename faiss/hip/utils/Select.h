@@ -207,11 +207,7 @@ struct BlockSelect {
     __device__ inline void checkThreadQ() {
         bool needSort = (numVals == NumThreadQ);
 
-#if CUDA_VERSION >= 9000
-        needSort = __any_sync(0xffffffff, needSort);
-#else
         needSort = __any(needSort);
-#endif
 
         if (!needSort) {
             // no lanes have triggered a sort
@@ -484,11 +480,7 @@ struct WarpSelect {
     __device__ inline void checkThreadQ() {
         bool needSort = (numVals == NumThreadQ);
 
-#if CUDA_VERSION >= 9000
-        needSort = __any_sync(0xffffffff, needSort);
-#else
         needSort = __any(needSort);
-#endif
 
         if (!needSort) {
             // no lanes have triggered a sort

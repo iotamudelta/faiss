@@ -117,10 +117,10 @@ inline void fromDevice(T* src, T* dst, size_t num, hipStream_t stream) {
     int dev = getDeviceForAddress(dst);
 
     if (dev == -1) {
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 dst, src, num * sizeof(T), hipMemcpyDeviceToHost, stream));
     } else {
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 dst, src, num * sizeof(T), hipMemcpyDeviceToDevice, stream));
     }
 }

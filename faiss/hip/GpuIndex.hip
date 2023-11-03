@@ -397,7 +397,7 @@ void GpuIndex::searchFromCpuPaged_(
                 eventPrev->streamWaitOnEvent(copyStream);
             }
 
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     bufGpus[cur2BufIndex]->data(),
                     bufPinned[cur2BufIndex],
                     numToCopy * this->d * sizeof(float),

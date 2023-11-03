@@ -44,7 +44,7 @@ getBitfield(uint64_t val, int pos, int len) {
 }
 
 __device__ __forceinline__ int getLaneId() {
-    return threadIdx.x & 63;
+    return threadIdx.x & (32 - 1); //(__AMDGCN_WAVEFRONT_SIZE - 1);
 }
 
 } // namespace hip

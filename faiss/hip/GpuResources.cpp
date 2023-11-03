@@ -183,7 +183,7 @@ hipStream_t GpuResources::getAsyncCopyStreamCurrentDevice() {
 }
 
 void GpuResources::syncDefaultStream(int device) {
-    CUDA_VERIFY(hipStreamSynchronize(getDefaultStream(device)));
+    HIP_VERIFY(hipStreamSynchronize(getDefaultStream(device)));
 }
 
 void GpuResources::syncDefaultStreamCurrentDevice() {

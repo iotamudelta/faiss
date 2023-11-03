@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
     HostTensor<float, 2, true> gpuDistances({numQueries, FLAGS_k});
     HostTensor<faiss::idx_t, 2, true> gpuIndices({numQueries, FLAGS_k});
 
-    CUDA_VERIFY(hipProfilerStart());
+    HIP_VERIFY(hipProfilerStart());
     faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
@@ -137,7 +137,7 @@ int main(int argc, char** argv) {
         gpuTime = timer.elapsedMilliseconds();
     }
 
-    CUDA_VERIFY(hipProfilerStop());
+    HIP_VERIFY(hipProfilerStop());
     printf("GPU time %.3f ms\n", gpuTime);
 
     if (FLAGS_cpu) {
@@ -154,7 +154,7 @@ int main(int argc, char** argv) {
                 false);
     }
 
-    CUDA_VERIFY(hipDeviceSynchronize());
+    HIP_VERIFY(hipDeviceSynchronize());
 
     return 0;
 }

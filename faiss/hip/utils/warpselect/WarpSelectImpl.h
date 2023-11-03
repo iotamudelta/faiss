@@ -38,7 +38,7 @@
                                                                                \
         warpSelect<TYPE, idx_t, DIR, WARP_Q, THREAD_Q, kWarpSelectNumThreads>  \
                 <<<grid, block, 0, stream>>>(in, outK, outV, kInit, vInit, k); \
-        CUDA_TEST_ERROR();                                                     \
+        HIP_TEST_ERROR();                                                     \
     }
 
 #define WARP_SELECT_CALL(TYPE, DIR, WARP_Q) \

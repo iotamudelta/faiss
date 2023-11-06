@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 
     IndexWrapper<faiss::hip::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
 
-    CUDA_VERIFY(cudaProfilerStart());
+    HIP_VERIFY(cudaProfilerStart());
     faiss::hip::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
@@ -112,10 +112,10 @@ int main(int argc, char** argv) {
         gpuTime = timer.elapsedMilliseconds();
     }
 
-    CUDA_VERIFY(cudaProfilerStop());
+    HIP_VERIFY(cudaProfilerStop());
     printf("k-means time %.3f ms\n", gpuTime);
 
-    CUDA_VERIFY(cudaDeviceSynchronize());
+    HIP_VERIFY(cudaDeviceSynchronize());
 
     return 0;
 }

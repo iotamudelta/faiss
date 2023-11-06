@@ -134,8 +134,8 @@ class CudaEvent {
     hipEvent_t event_;
 };
 
-/// Wrapper to test return status of CUDA functions
-#define CUDA_VERIFY(X)                      \
+/// Wrapper to test return status of HIP functions
+#define HIP_VERIFY(X)                      \
     do {                                    \
         auto err__ = (X);                   \
         FAISS_ASSERT_FMT(                   \
@@ -149,14 +149,14 @@ class CudaEvent {
 // #define FAISS_GPU_SYNC_ERROR 1
 
 #ifdef FAISS_GPU_SYNC_ERROR
-#define CUDA_TEST_ERROR()                     \
+#define HIP_TEST_ERROR()                     \
     do {                                      \
-        CUDA_VERIFY(hipDeviceSynchronize()); \
+        HIP_VERIFY(hipDeviceSynchronize()); \
     } while (0)
 #else
-#define CUDA_TEST_ERROR()                \
+#define HIP_TEST_ERROR()                \
     do {                                 \
-        CUDA_VERIFY(hipGetLastError()); \
+        HIP_VERIFY(hipGetLastError()); \
     } while (0)
 #endif
 
@@ -167,20 +167,20 @@ void streamWaitBase(const L1& listWaiting, const L2& listWaitOn) {
     std::vector<hipEvent_t> events;
     for (auto& stream : listWaitOn) {
         hipEvent_t event;
-        CUDA_VERIFY(hipEventCreateWithFlags(&event, hipEventDisableTiming));
-        CUDA_VERIFY(hipEventRecord(event, stream));
+        HIP_VERIFY(hipEventCreateWithFlags(&event, hipEventDisableTiming));
+        HIP_VERIFY(hipEventRecord(event, stream));
         events.push_back(event);
     }
 
     // For all the streams that are waiting, issue a wait
     for (auto& stream : listWaiting) {
         for (auto& event : events) {
-            CUDA_VERIFY(hipStreamWaitEvent(stream, event, 0));
+            HIP_VERIFY(hipStreamWaitEvent(stream, event, 0));
         }
     }
 
     for (auto& event : events) {
-        CUDA_VERIFY(hipEventDestroy(event));
+        HIP_VERIFY(hipEventDestroy(event));
     }
 }
 

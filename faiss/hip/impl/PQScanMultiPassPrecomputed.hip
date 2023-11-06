@@ -357,6 +357,7 @@ void runMultiPassTile(
                         listLengths.data(),                               \
                         prefixSumOffsets,                                 \
                         allDistances);                                    \
+         HIP_TEST_ERROR();                                               \
     } while (0)
 
         if (useFloat16Lookup) {
@@ -432,6 +433,7 @@ void runMultiPassTile(
                         listLengths.data(),                           \
                         prefixSumOffsets,                             \
                         allDistances);                                \
+         HIP_TEST_ERROR();                                           \
     } while (0)
 
 #define RUN_PQ(NUM_SUB_Q)                         \
@@ -497,7 +499,7 @@ void runMultiPassTile(
                 break;
         }
 
-        CUDA_TEST_ERROR();
+        HIP_TEST_ERROR();
 
 #undef RUN_PQ
 #undef RUN_PQ_OPT
@@ -534,7 +536,7 @@ void runMultiPassTile(
             outIndices,
             stream);
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runPQScanMultiPassPrecomputed(
@@ -633,9 +635,9 @@ void runPQScanMultiPassPrecomputed(
 
     // Make sure the element before prefixSumOffsets is 0, since we
     // depend upon simple, boundary-less indexing to get proper results
-    CUDA_VERIFY(hipMemsetAsync(
+    HIP_VERIFY(hipMemsetAsync(
             prefixSumOffsetSpace1.data(), 0, sizeof(idx_t), stream));
-    CUDA_VERIFY(hipMemsetAsync(
+    HIP_VERIFY(hipMemsetAsync(
             prefixSumOffsetSpace2.data(), 0, sizeof(idx_t), stream));
 
     DeviceTensor<float, 1, true> allDistances1(

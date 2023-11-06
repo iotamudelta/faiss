@@ -241,6 +241,7 @@ void IcmEncoderImpl::computeUnaryTerms(
         auto uPtr = uterm + m * n * K;
         auto nPtr = norm.data() + m * K;
         runNormAddition<<<n, K, 0, stream>>>(uPtr, nPtr, K);
+        HIP_TEST_ERROR();
     }
 }
 
@@ -329,6 +330,7 @@ void IcmEncoderImpl::encode(
             M,
             K,
             dims);
+    HIP_TEST_ERROR();
 
     int blockSize = 256;
     int numBlocks = (n + blockSize - 1) / blockSize;
@@ -336,6 +338,7 @@ void IcmEncoderImpl::encode(
     for (int i = 0; i < ilsIters; i++) {
         runCodesPerturbation<<<numBlocks, blockSize, 0, stream>>>(
                 gen(), codes.data(), n, M, K, nperts);
+        HIP_TEST_ERROR();
 
         // perform icm encoding
         for (int j = 0; j < icmIters; j++) {
@@ -347,6 +350,7 @@ void IcmEncoderImpl::encode(
                         M,
                         K,
                         m);
+                HIP_TEST_ERROR();
             }
         }
 
@@ -360,6 +364,7 @@ void IcmEncoderImpl::encode(
                 M,
                 K,
                 dims);
+        HIP_TEST_ERROR();
 
         // if objs[i] < best_objs[i], replace best_codes[i] with codes[i]
         runCodesSelection<<<numBlocks, blockSize, 0, stream>>>(
@@ -369,6 +374,7 @@ void IcmEncoderImpl::encode(
                 objs.data(),
                 n,
                 M);
+        HIP_TEST_ERROR();
 
         codes.copyFrom(bestCodes, stream);
     }

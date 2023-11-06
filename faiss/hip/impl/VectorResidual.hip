@@ -82,7 +82,7 @@ void calcResidual(
                 vecs, centroids, vecToCentroid, residuals);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runCalcResidual(
@@ -152,7 +152,7 @@ void gatherReconstructByIds(
 
     gatherReconstructByIds<T><<<grid, block, 0, stream>>>(ids, vecs, out);
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 template <typename T>
@@ -175,7 +175,7 @@ void gatherReconstructByRange(
     gatherReconstructByRange<T>
             <<<grid, block, 0, stream>>>(start, num, vecs, out);
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runReconstruct(

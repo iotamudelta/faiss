@@ -250,6 +250,7 @@ void runGeneralDistanceKernel(
     dim3 block(kWarpSize, kWarpSize);
 
     generalDistance<<<grid, block, 0, stream>>>(query, vecs, op, out);
+    HIP_TEST_ERROR();
 }
 
 template <typename T, typename DistanceOp, bool InnerContig>
@@ -449,7 +450,7 @@ void runGeneralDistance(
         FAISS_THROW_MSG("interrupted");
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

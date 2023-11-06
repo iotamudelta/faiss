@@ -265,7 +265,7 @@ void runSumAlongColumns(
                 <<<grid, block, 0, stream>>>(input, output);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runSumAlongColumns(
@@ -320,7 +320,7 @@ void runAssignAlongColumns(
                 <<<grid, block, 0, stream>>>(input, output);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runAssignAlongColumns(
@@ -356,7 +356,7 @@ void runSumAlongRows(
         sumAlongRows<T, false><<<grid, block, 0, stream>>>(input, output);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runSumAlongRows(

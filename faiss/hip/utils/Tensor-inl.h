@@ -197,7 +197,7 @@ __host__ void Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::copyFrom(
         int tDev = getDeviceForAddress(t.data());
 
         if (tDev == -1) {
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     this->data_,
                     t.data(),
                     this->getSizeInBytes(),
@@ -205,7 +205,7 @@ __host__ void Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::copyFrom(
                                  : hipMemcpyHostToDevice,
                     stream));
         } else {
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     this->data_,
                     t.data(),
                     this->getSizeInBytes(),
@@ -242,7 +242,7 @@ __host__ void Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::copyTo(
         int tDev = getDeviceForAddress(t.data());
 
         if (tDev == -1) {
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     t.data(),
                     this->data_,
                     this->getSizeInBytes(),
@@ -250,7 +250,7 @@ __host__ void Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::copyTo(
                                  : hipMemcpyDeviceToHost,
                     stream));
         } else {
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     t.data(),
                     this->data_,
                     this->getSizeInBytes(),
@@ -281,7 +281,7 @@ __host__ void Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::copyFrom(
         GPU_FAISS_ASSERT(this->data_);
         int ourDev = getDeviceForAddress(this->data_);
 
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 this->data_,
                 v.data(),
                 this->getSizeInBytes(),
@@ -311,7 +311,7 @@ __host__ std::vector<T> Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::
             std::memcpy(
                     out.data(), this->data_, this->numElements() * sizeof(T));
         } else {
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     out.data(),
                     this->data_,
                     this->numElements() * sizeof(T),

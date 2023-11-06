@@ -78,7 +78,7 @@ class DeviceVector {
 
         if (num_ > 0) {
             FAISS_ASSERT(data());
-            CUDA_VERIFY(hipMemcpyAsync(
+            HIP_VERIFY(hipMemcpyAsync(
                     out.data(),
                     data(),
                     num_ * sizeof(T),
@@ -109,14 +109,14 @@ class DeviceVector {
 
             int dev = getDeviceForAddress(d);
             if (dev == -1) {
-                CUDA_VERIFY(hipMemcpyAsync(
+                HIP_VERIFY(hipMemcpyAsync(
                         data() + num_,
                         d,
                         n * sizeof(T),
                         hipMemcpyHostToDevice,
                         stream));
             } else {
-                CUDA_VERIFY(hipMemcpyAsync(
+                HIP_VERIFY(hipMemcpyAsync(
                         data() + num_,
                         d,
                         n * sizeof(T),
@@ -155,7 +155,7 @@ class DeviceVector {
     // Set the specific value at a given index to `value`
     void setAt(size_t idx, const T& value, hipStream_t stream) {
         FAISS_ASSERT(idx < num_);
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 data() + idx,
                 &value,
                 sizeof(T),
@@ -168,7 +168,7 @@ class DeviceVector {
         FAISS_ASSERT(idx < num_);
 
         T out;
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 &out, data() + idx, sizeof(T), hipMemcpyDeviceToHost, stream));
     }
 
@@ -228,7 +228,7 @@ class DeviceVector {
                 AllocRequest(allocInfo_, newSizeInBytes));
 
         // Copy over any old data
-        CUDA_VERIFY(hipMemcpyAsync(
+        HIP_VERIFY(hipMemcpyAsync(
                 newAlloc.data,
                 data(),
                 oldSizeInBytes,
@@ -236,7 +236,7 @@ class DeviceVector {
                 stream));
 
         // Zero out the new space past the data we just copied
-        CUDA_VERIFY(hipMemsetAsync(
+        HIP_VERIFY(hipMemsetAsync(
                 (uint8_t*)newAlloc.data + oldSizeInBytes,
                 0,
                 newSizeInBytes - oldSizeInBytes,

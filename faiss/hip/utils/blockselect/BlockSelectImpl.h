@@ -60,7 +60,7 @@
                 THREAD_Q,                                                      \
                 kBlockSelectNumThreads>                                        \
                 <<<grid, block, 0, stream>>>(in, outK, outV, kInit, vInit, k); \
-        CUDA_TEST_ERROR();                                                     \
+        HIP_TEST_ERROR();                                                     \
     }                                                                          \
                                                                                \
     void runBlockSelectPair_##TYPE##_##DIR##_##WARP_Q##_(                      \
@@ -93,7 +93,7 @@
                 THREAD_Q,                                                      \
                 kBlockSelectNumThreads><<<grid, block, 0, stream>>>(           \
                 inK, inV, outK, outV, kInit, vInit, k);                        \
-        CUDA_TEST_ERROR();                                                     \
+        HIP_TEST_ERROR();                                                     \
     }
 
 #define BLOCK_SELECT_CALL(TYPE, DIR, WARP_Q) \

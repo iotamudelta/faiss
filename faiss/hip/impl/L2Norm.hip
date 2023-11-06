@@ -239,6 +239,7 @@ void runL2Norm(
                         <<<grid, block, smem, stream>>>(INPUT, output);      \
             }                                                                \
         }                                                                    \
+        HIP_TEST_ERROR();                                                   \
     } while (0)
 
     if (inputRowMajor) {
@@ -295,11 +296,12 @@ void runL2Norm(
         } else {
             l2NormColMajor<T, false><<<grid, block, 0, stream>>>(input, output);
         }
+        HIP_TEST_ERROR();
     }
 
 #undef RUN_L2
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 void runL2Norm(

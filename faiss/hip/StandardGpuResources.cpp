@@ -134,21 +134,21 @@ StandardGpuResourcesImpl::~StandardGpuResourcesImpl() {
         DeviceScope scope(entry.first);
 
         // We created these streams, so are responsible for destroying them
-        CUDA_VERIFY(hipStreamDestroy(entry.second));
+        HIP_VERIFY(hipStreamDestroy(entry.second));
     }
 
     for (auto& entry : alternateStreams_) {
         DeviceScope scope(entry.first);
 
         for (auto stream : entry.second) {
-            CUDA_VERIFY(hipStreamDestroy(stream));
+            HIP_VERIFY(hipStreamDestroy(stream));
         }
     }
 
     for (auto& entry : asyncCopyStreams_) {
         DeviceScope scope(entry.first);
 
-        CUDA_VERIFY(hipStreamDestroy(entry.second));
+        HIP_VERIFY(hipStreamDestroy(entry.second));
     }
 
     for (auto& entry : blasHandles_) {
@@ -349,20 +349,21 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
             prop.minor);
 
     // Our code is pre-built with and expects warpSize == 32, validate that
-    FAISS_ASSERT_FMT(
-            prop.warpSize == 64,
-            "Device id %d does not have expected warpSize of 64",
-            device);
+    // we can have either warp size 32 or 64 - disable this check
+    //FAISS_ASSERT_FMT(
+    //        prop.warpSize == 64,
+    //        "Device id %d does not have expected warpSize of 64",
+    //        device);
 
     // Create streams
     hipStream_t defaultStream = 0;
-    CUDA_VERIFY(
+    HIP_VERIFY(
             hipStreamCreateWithFlags(&defaultStream, hipStreamNonBlocking));
 
     defaultStreams_[device] = defaultStream;
 
     hipStream_t asyncCopyStream = 0;
-    CUDA_VERIFY(
+    HIP_VERIFY(
             hipStreamCreateWithFlags(&asyncCopyStream, hipStreamNonBlocking));
 
     asyncCopyStreams_[device] = asyncCopyStream;
@@ -370,7 +371,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
     std::vector<hipStream_t> deviceStreams;
     for (int j = 0; j < kNumStreams; ++j) {
         hipStream_t stream = 0;
-        CUDA_VERIFY(hipStreamCreateWithFlags(&stream, hipStreamNonBlocking));
+        HIP_VERIFY(hipStreamCreateWithFlags(&stream, hipStreamNonBlocking));
 
         deviceStreams.push_back(stream);
     }

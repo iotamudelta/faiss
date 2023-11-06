@@ -326,7 +326,7 @@ void runIncrementIndex(
     auto block = std::min(k, getMaxThreadsCurrentDevice());
 
     incrementIndex<<<grid, block, 0, stream>>>(indices, k, increment);
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 // If the inner size (dim) of the vectors is small, we want a larger query tile

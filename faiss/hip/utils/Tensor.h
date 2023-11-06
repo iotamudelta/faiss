@@ -470,21 +470,13 @@ class SubTensor<TensorType, 0, PtrTraits> {
 
     /// Use the texture cache for reads
     __device__ inline typename TensorType::DataType ldg() const {
-#if __CUDA_ARCH__ >= 350
         return __ldg(data_);
-#else
-        return *data_;
-#endif
     }
 
     /// Use the texture cache for reads; cast as a particular type
     template <typename T>
     __device__ inline T ldgAs() const {
-#if __CUDA_ARCH__ >= 350
         return __ldg(dataAs<T>());
-#else
-        return as<T>();
-#endif
     }
 
    protected:
@@ -606,21 +598,13 @@ class SubTensor {
 
     /// Use the texture cache for reads
     __device__ inline typename TensorType::DataType ldg() const {
-#if __CUDA_ARCH__ >= 350
         return __ldg(data_);
-#else
-        return *data_;
-#endif
     }
 
     /// Use the texture cache for reads; cast as a particular type
     template <typename T>
     __device__ inline T ldgAs() const {
-#if __CUDA_ARCH__ >= 350
         return __ldg(dataAs<T>());
-#else
-        return as<T>();
-#endif
     }
 
     /// Returns a tensor that is a view of the SubDim-dimensional slice

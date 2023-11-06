@@ -252,7 +252,7 @@ void ivfInterleavedScanImpl(
         FAISS_ASSERT(false);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

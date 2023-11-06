@@ -55,8 +55,10 @@ void runWarpSelect(
     if (dir) {
         if (k == 1) {
             WARP_SELECT_CALL(float, true, 1);
-        //} else if (k <= 32) {
-        //    WARP_SELECT_CALL(float, true, 32);
+#if (__gfx1010__ || __gfx1011__ || __gfx1012__ || __gfx1030__ || __gfx1031__)
+        } else if (k <= 32) {
+            WARP_SELECT_CALL(float, true, 32);
+#endif
         } else if (k <= 64) {
             WARP_SELECT_CALL(float, true, 64);
         } else if (k <= 128) {
@@ -75,8 +77,10 @@ void runWarpSelect(
     } else {
         if (k == 1) {
             WARP_SELECT_CALL(float, false, 1);
-        //} else if (k <= 32) {
-        //    WARP_SELECT_CALL(float, false, 32);
+#if (__gfx1010__ || __gfx1011__ || __gfx1012__ || __gfx1030__ || __gfx1031__)
+        } else if (k <= 32) {
+            WARP_SELECT_CALL(float, false, 32);
+#endif
         } else if (k <= 64) {
             WARP_SELECT_CALL(float, false, 64);
         } else if (k <= 128) {

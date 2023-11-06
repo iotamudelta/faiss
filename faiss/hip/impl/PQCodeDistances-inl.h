@@ -350,7 +350,7 @@ void runPQResidualVector(
                 residual);
     }
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 template <typename T>
@@ -391,6 +391,7 @@ void runPQDistanceIPCorrection(
 
     pqDistanceIPCorrection<<<grid, block, 0, stream>>>(
             codeView, coarseDistances, codeDistances.getSize(2));
+    HIP_TEST_ERROR();
 }
 
 // This is a general purpose implementation that leverages GEMM to calculate
@@ -665,6 +666,7 @@ void runPQCodeDistances(
                             coarseIndices,                               \
                             outCodeDistancesT);                          \
         }                                                                \
+        HIP_TEST_ERROR();                                               \
     } while (0)
 
 #define CODE_L2(DIMS)              \
@@ -729,7 +731,7 @@ void runPQCodeDistances(
 #undef RUN_CODE
 #undef CODE_L2
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

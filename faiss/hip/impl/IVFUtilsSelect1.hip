@@ -125,6 +125,7 @@ void runPass1SelectLists(
                         k,                                              \
                         heapDistances,                                  \
                         heapIndices);                                   \
+        HIP_TEST_ERROR();                                              \
         return; /* success */                                           \
     } while (0)
 
@@ -135,8 +136,8 @@ void runPass1SelectLists(
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \
-        /*} else if (k <= 32) {                   */  \
-        /*    RUN_PASS(INDEX_T, 128, 32, 2, DIR); */  \
+        } else if (k <= 32) {                     \
+            RUN_PASS(INDEX_T, 128, 32, 2, DIR);   \
         } else if (k <= 64) {                     \
             RUN_PASS(INDEX_T, 128, 64, 3, DIR);   \
         } else if (k <= 128) {                    \
@@ -158,8 +159,8 @@ void runPass1SelectLists(
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \
-        /*} else if (k <= 32) {                   */  \
-        /*    RUN_PASS(INDEX_T, 128, 32, 2, DIR); */  \
+        } else if (k <= 32) {                     \
+            RUN_PASS(INDEX_T, 128, 32, 2, DIR);   \
         } else if (k <= 64) {                     \
             RUN_PASS(INDEX_T, 128, 64, 3, DIR);   \
         } else if (k <= 128) {                    \
@@ -192,7 +193,7 @@ void runPass1SelectLists(
 #undef RUN_PASS_DIR
 #undef RUN_PASS
 
-    CUDA_TEST_ERROR();
+    HIP_TEST_ERROR();
 }
 
 } // namespace hip

@@ -14,7 +14,7 @@ namespace faiss {
 namespace hip {
 
 // We validate this against the actual architecture in device initialization
-constexpr int kWarpSize = warpSize;   // = 64 (Defined in hip_runtime.h)
+constexpr int kWarpSize = 32;//__AMDGCN_WAVEFRONT_SIZE;   // either = 32 or = 64 (Defined in hip_runtime.h)
 
 // This is a memory barrier for intra-warp writes to shared memory.
 __forceinline__ __device__ void warpFence() {

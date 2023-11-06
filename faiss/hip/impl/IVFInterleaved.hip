@@ -172,6 +172,7 @@ void runIVFInterleavedScan2(
         IVF_SCAN_2(64, 2048, 8);
     }
 #endif
+    HIP_TEST_ERROR();
 }
 
 void runIVFInterleavedScan(

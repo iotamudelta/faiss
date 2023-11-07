@@ -14,7 +14,11 @@ namespace faiss {
 namespace hip {
 
 // We validate this against the actual architecture in device initialization
-constexpr int kWarpSize = 32;//__AMDGCN_WAVEFRONT_SIZE;   // either = 32 or = 64 (Defined in hip_runtime.h)
+#ifdef HIP_WF32
+constexpr int kWarpSize = 32; // either = 32 or = 64 (Defined in hip_runtime.h)
+#else
+constexpr int kWarpSize = 64;
+#endif
 
 // This is a memory barrier for intra-warp writes to shared memory.
 __forceinline__ __device__ void warpFence() {
@@ -24,11 +28,13 @@ __forceinline__ __device__ void warpFence() {
 }
 
 #if CUDA_VERSION > 9000
+#warning("CUDA > 9000, somehow")
 // Based on the CUDA version (we assume what version of nvcc/ptxas we were
 // compiled with), the register allocation algorithm is much better, so only
 // enable the 2048 selection code if we are above 9.0 (9.2 seems to be ok)
 #define GPU_MAX_SELECTION_K 2048
 #else
+#warning("CUDA small")
 #define GPU_MAX_SELECTION_K 1024
 #endif
 

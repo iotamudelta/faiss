@@ -33,31 +33,14 @@ template <>
 struct LoadStore<Half4> {
     static inline __device__ Half4 load(void* p) {
         Half4 out;
-        half2* t = reinterpret_cast<half2*>(p);
-        out.a = t[0];
-	out.b = t[1];
-    //DONE        asm("ld.global.v2.u32 {%0, %1}, [%2];"
-    //DONE            : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
-    //DONE            : "l"(p));
-
-    //DONE        asm("ld.global.v2.u32 {%0, %1}, [%2];"
-    //DONE            : "=r"(out.a.x), "=r"(out.b.x)
-    //DONE             : "l"(p));
-
+        Half4* t = reinterpret_cast<Half4*>(p);
+        out = *t;
         return out;
     }
 
     static inline __device__ void store(void* p, Half4& v) {
-        half2* t = reinterpret_cast<half2*>(p);
-        v.a = t[0];
-        v.b = t[1];
-//#if CUDA_VERSION >= 9000
-//DONE        asm("st.v2.u32 [%0], {%1, %2};"
-//DONE            :
-//DONE            : "l"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
-//#else
-//DONE        asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
-//#endif
+        Half4* t = reinterpret_cast<Half4*>(p);
+        *t = v;
     }
 };
 
@@ -65,45 +48,14 @@ template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
         Half8 out;
-	half2* t = reinterpret_cast<half2*>(p);
-        out.a.a = t[0];
-        out.a.b = t[1];
-        out.b.a = t[2];
-	out.b.b = t[3];
-//#if CUDA_VERSION >= 9000
-//DONE        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
-//DONE            : "=r"(__HALF2_TO_UI(out.a.a)),
-//DONE              "=r"(__HALF2_TO_UI(out.a.b)),
-//DONE              "=r"(__HALF2_TO_UI(out.b.a)),
-//DONE              "=r"(__HALF2_TO_UI(out.b.b))
-//DONE            : "l"(p));
-//#else
-//DONE        asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
-//DONE            : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-//DONE            : "l"(p));
-//#endif
+	Half8* t = reinterpret_cast<Half8*>(p);
+        out = *t;
         return out;
     }
 
     static inline __device__ void store(void* p, Half8& v) {
-        half2* t = reinterpret_cast<half2*>(p);
-        v.a.a = t[0];
-        v.a.b = t[1];
-        v.b.a = t[2];
-        v.b.b = t[3];
-//#if CUDA_VERSION >= 9000
-//DONE        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
-//DONE            :
-//DONE            : "l"(p),
-//DONE              "r"(__HALF2_TO_UI(v.a.a)),
-//DONE              "r"(__HALF2_TO_UI(v.a.b)),
-//DONE              "r"(__HALF2_TO_UI(v.b.a)),
-//DONE              "r"(__HALF2_TO_UI(v.b.b)));
-//#else
-//DONE        asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
-//DONE            :
-//DONE            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
-//#endif
+        Half8* t = reinterpret_cast<Half8*>(p);
+        *t = v;
     }
 };
 

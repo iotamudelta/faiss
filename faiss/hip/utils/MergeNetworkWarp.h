@@ -535,10 +535,8 @@ struct BitonicSortStep<K, V, 1, Dir, Comp> {
         warpBitonicMergeLE16<K, V, 4, Dir, Comp, false>(k[0], v[0]);
         warpBitonicMergeLE16<K, V, 8, Dir, Comp, false>(k[0], v[0]);
         warpBitonicMergeLE16<K, V, 16, Dir, Comp, false>(k[0], v[0]);
-#if !(__gfx1010__ || __gfx1011__ || __gfx1012__ || __gfx1030__ || __gfx1031__)
-//TODO needs to be fixed
-//#warning(including wider merge)
-//	warpBitonicMergeLE16<K, V, 32, Dir, Comp, false>(k[0], v[0]);
+#ifndef HIP_WF32
+	warpBitonicMergeLE16<K, V, 32, Dir, Comp, false>(k[0], v[0]);
 #endif
     }
 };

@@ -55,7 +55,7 @@ void runWarpSelect(
     if (dir) {
         if (k == 1) {
             WARP_SELECT_CALL(float, true, 1);
-#if (__gfx1010__ || __gfx1011__ || __gfx1012__ || __gfx1030__ || __gfx1031__)
+#ifdef HIP_WF32
         } else if (k <= 32) {
             WARP_SELECT_CALL(float, true, 32);
 #endif
@@ -77,7 +77,7 @@ void runWarpSelect(
     } else {
         if (k == 1) {
             WARP_SELECT_CALL(float, false, 1);
-#if (__gfx1010__ || __gfx1011__ || __gfx1012__ || __gfx1030__ || __gfx1031__)
+#ifdef HIP_WF32
         } else if (k <= 32) {
             WARP_SELECT_CALL(float, false, 32);
 #endif

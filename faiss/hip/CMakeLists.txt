@@ -186,16 +186,29 @@ function(generate_ivf_interleaved_code)
   )
 
   # Used for SUB_THREADS, SUB_NUM_WARP_Q, SUB_NUM_THREAD_Q
+  if(FAISS_HIP_WF32)
   set(THREADS_AND_WARPS
     "128|1024|8"
     "128|1|1"
     "128|128|3"
     "128|256|4"
-    "128|32|2"  #"128|32|2"     TODO won't compile with a warpsize of 64. Changed to 64
+    "128|32|2"
     "128|512|8"
     "128|64|3"
     "64|2048|8"
   )
+  else()
+  set(THREADS_AND_WARPS
+    "128|1024|8"
+    "128|1|1"
+    "128|128|3"
+    "128|256|4"
+    "128|64|2"  #"128|32|2"     TODO won't compile with a warpsize of 64. Changed to 64
+    "128|512|8"
+    "128|64|3"
+    "64|2048|8"
+  )
+  endif()
 
   # Traverse through the Cartesian product of X and Y
   foreach(sub_codec ${SUB_CODEC_TYPE})

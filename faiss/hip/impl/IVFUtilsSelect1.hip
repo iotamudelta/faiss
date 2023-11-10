@@ -133,6 +133,7 @@ void runPass1SelectLists(
 
     // block size 128 for k <= 1024, 64 for k = 2048
 #ifdef HIP_WF32
+#define RUN_PASS_DIR(INDEX_T, DIR)                \
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \
@@ -177,6 +178,7 @@ void runPass1SelectLists(
 #else
 
 #ifdef HIP_WF32
+#define RUN_PASS_DIR(INDEX_T, DIR)                \
     do {                                          \
         if (k == 1) {                             \
             RUN_PASS(INDEX_T, 128, 1, 1, DIR);    \

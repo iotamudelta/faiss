@@ -244,10 +244,11 @@ void runL2SelectMin(
         HIP_TEST_ERROR();                                       \
     } while (false)
 
+#ifdef HIP_WF32
         // block size 128 for everything <= 1024
-        /*if (k <= 32) {
+        if (k <= 32) {
             RUN_L2_SELECT(128, 32, 2);
-        } else*/ if (k <= 64) {
+        } else if (k <= 64) {
             RUN_L2_SELECT(128, 64, 3);
         } else if (k <= 128) {
             RUN_L2_SELECT(128, 128, 3);
@@ -257,6 +258,18 @@ void runL2SelectMin(
             RUN_L2_SELECT(128, 512, 8);
         } else if (k <= 1024) {
             RUN_L2_SELECT(128, 1024, 8);
+#else
+        if (k <= 64) {
+            RUN_L2_SELECT(128, 64, 3);
+        } else if (k <= 128) {
+            RUN_L2_SELECT(128, 128, 3);
+        } else if (k <= 256) {
+            RUN_L2_SELECT(128, 256, 4);
+        } else if (k <= 512) {
+            RUN_L2_SELECT(128, 512, 8);
+        } else if (k <= 1024) {
+            RUN_L2_SELECT(128, 1024, 8);
+#endif
 
 #if GPU_MAX_SELECTION_K >= 2048
         } else if (k <= 2048) {

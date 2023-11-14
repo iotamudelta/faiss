@@ -203,9 +203,11 @@ void runBinaryDistanceAnySize(
     if (k == 1) {
         binaryDistanceAnySize<1, 1, BinaryType>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
-    //} else if (k <= 32) {
-    //    binaryDistanceAnySize<64, 2, BinaryType>
-    //            <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+#ifdef HIP_WF32
+    } else if (k <= 32) {
+        binaryDistanceAnySize<32, 2, BinaryType>
+                <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+#endif
     } else if (k <= 64) {
         binaryDistanceAnySize<64, 3, BinaryType>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
@@ -245,9 +247,11 @@ void runBinaryDistanceLimitSize(
     if (k == 1) {
         binaryDistanceLimitSize<1, 1, BinaryType, ReductionLimit>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
-    //} else if (k <= 32) {
-    //    binaryDistanceLimitSize<64, 2, BinaryType, ReductionLimit>
-    //            <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+#ifdef HIP_WF32
+    } else if (k <= 32) {
+        binaryDistanceLimitSize<32, 2, BinaryType, ReductionLimit>
+                <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);
+#endif
     } else if (k <= 64) {
         binaryDistanceLimitSize<64, 3, BinaryType, ReductionLimit>
                 <<<grid, block, 0, stream>>>(vecs, query, outK, outV, k);

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <hip_fp16.h>
+#include <hip/hip_fp16.h>
 #include <faiss/hip/test/TestUtils.h>
 #include <faiss/utils/random.h>
 #include <gtest/gtest.h>

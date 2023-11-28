@@ -259,6 +259,8 @@ namespace std {
 
 #ifdef GPU_WRAPPER
 %template(GpuResourcesVector) std::vector<faiss::gpu::GpuResourcesProvider*>;
+#elif defined HIP_WRAPPER
+%template(GpuResourcesVector) std::vector<faiss::hip::GpuResourcesProvider*>;
 #endif
 
 // produces an error on the Mac
@@ -355,6 +357,78 @@ cudaStream_t cast_integer_to_cudastream_t(int64_t x) {
 }
 
 int64_t cast_cudastream_t_to_integer(cudaStream_t x) {
+  return (int64_t) x;
+}
+
+%}
+
+#elif defined HIP_WRAPPER
+%shared_ptr(faiss::hip::GpuResources);
+%shared_ptr(faiss::hip::StandardGpuResourcesImpl);
+
+%{
+
+#include <faiss/hip/StandardGpuResources.h>
+#include <faiss/hip/GpuIndicesOptions.h>
+#include <faiss/hip/GpuClonerOptions.h>
+#include <faiss/hip/GpuIndex.h>
+#include <faiss/hip/GpuIndexFlat.h>
+#include <faiss/hip/GpuIndexIVF.h>
+#include <faiss/hip/GpuIndexIVFPQ.h>
+#include <faiss/hip/GpuIndexIVFFlat.h>
+#include <faiss/hip/GpuIndexIVFScalarQuantizer.h>
+#include <faiss/hip/GpuIndexBinaryFlat.h>
+#include <faiss/hip/GpuAutoTune.h>
+#include <faiss/hip/GpuCloner.h>
+#include <faiss/hip/GpuDistance.h>
+#include <faiss/hip/GpuIcmEncoder.h>
+
+int get_num_gpus()
+{
+    return faiss::hip::getNumDevices();
+}
+
+void gpu_profiler_start()
+{
+    return faiss::hip::profilerStart();
+}
+
+void gpu_profiler_stop()
+{
+    return faiss::hip::profilerStop();
+}
+
+void gpu_sync_all_devices()
+{
+    return faiss::hip::synchronizeAllDevices();
+}
+
+%}
+
+%template() std::pair<int, uint64_t>;
+%template() std::map<std::string, std::pair<int, uint64_t> >;
+%template() std::map<int, std::map<std::string, std::pair<int, uint64_t> > >;
+
+// causes weird wrapper bug
+%ignore *::allocMemoryHandle;
+%ignore faiss::hip::GpuMemoryReservation;
+%ignore faiss::hip::GpuMemoryReservation::operator=(GpuMemoryReservation&&);
+%ignore faiss::hip::AllocType;
+
+%include  <faiss/hip/GpuResources.h>
+%include  <faiss/hip/StandardGpuResources.h>
+
+
+// typedef HIPstream_st* hipStream_t;
+
+%inline %{
+
+// interop between pytorch exposed hipStream_t and faiss
+hipStream_t cast_integer_to_hipstream_t(int64_t x) {
+  return (hipStream_t) x;
+}
+
+int64_t cast_hipstream_t_to_integer(hipStream_t x) {
   return (int64_t) x;
 }
 
@@ -556,6 +630,24 @@ void gpu_sync_all_devices()
 %include  <faiss/gpu/GpuIcmEncoder.h>
 
 
+#elif defined HIP_WRAPPER
+#warning("Enabling HIP wrapper")
+
+// quiet SWIG warnings
+%ignore faiss::hip::GpuIndexIVF::GpuIndexIVF;
+
+%include  <faiss/hip/GpuIndicesOptions.h>
+%include  <faiss/hip/GpuClonerOptions.h>
+%include  <faiss/hip/GpuIndex.h>
+%include  <faiss/hip/GpuIndexFlat.h>
+%include  <faiss/hip/GpuIndexIVF.h>
+%include  <faiss/hip/GpuIndexIVFPQ.h>
+%include  <faiss/hip/GpuIndexIVFFlat.h>
+%include  <faiss/hip/GpuIndexIVFScalarQuantizer.h>
+%include  <faiss/hip/GpuIndexBinaryFlat.h>
+%include  <faiss/hip/GpuDistance.h>
+%include  <faiss/hip/GpuIcmEncoder.h>
+
 #endif
 
 
@@ -588,6 +680,12 @@ void gpu_sync_all_devices()
 %define DOWNCAST_GPU(subclass)
     if (dynamic_cast<faiss::gpu::subclass *> ($1)) {
       $result = SWIG_NewPointerObj($1,SWIGTYPE_p_faiss__gpu__ ## subclass,$owner);
+    } else
+%enddef
+
+%define DOWNCAST_HIP(subclass)
+    if (dynamic_cast<faiss::hip::subclass *> ($1)) {
+      $result = SWIG_NewPointerObj($1,SWIGTYPE_p_faiss__hip__ ## subclass,$owner);
     } else
 %enddef
 
@@ -666,6 +764,11 @@ void gpu_sync_all_devices()
     DOWNCAST_GPU ( GpuIndexIVFFlat )
     DOWNCAST_GPU ( GpuIndexIVFScalarQuantizer )
     DOWNCAST_GPU ( GpuIndexFlat )
+#elif defined HIP_WRAPPER
+    DOWNCAST_HIP ( GpuIndexIVFPQ )
+    DOWNCAST_HIP ( GpuIndexIVFFlat )
+    DOWNCAST_HIP ( GpuIndexIVFScalarQuantizer )
+    DOWNCAST_HIP ( GpuIndexFlat )
 #endif
     // default for non-recognized classes
     DOWNCAST ( Index )
@@ -692,6 +795,8 @@ void gpu_sync_all_devices()
     DOWNCAST ( IndexBinaryMultiHash )
 #ifdef GPU_WRAPPER
     DOWNCAST_GPU ( GpuIndexBinaryFlat )
+#elif defined HIP_WRAPPER
+    DOWNCAST_HIP ( GpuIndexBinaryFlat )
 #endif
     // default for non-recognized classes
     DOWNCAST ( IndexBinary )
@@ -797,6 +902,16 @@ faiss::Quantizer * downcast_Quantizer (faiss::Quantizer *aq)
 %newobject index_cpu_to_gpu_multiple;
 
 %include  <faiss/gpu/GpuCloner.h>
+
+#elif defined HIP_WRAPPER
+
+%include  <faiss/hip/GpuAutoTune.h>
+
+%newobject index_gpu_to_cpu;
+%newobject index_cpu_to_gpu;
+%newobject index_cpu_to_gpu_multiple;
+
+%include  <faiss/hip/GpuCloner.h>
 
 #endif
 

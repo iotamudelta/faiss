@@ -215,7 +215,6 @@ CublasHandleScope::~CublasHandleScope() {
 CudaEvent::CudaEvent(hipStream_t stream, bool timer) : event_(0) {
     HIP_VERIFY(hipEventCreateWithFlags(
             &event_, timer ? hipEventDefault : hipEventDisableTiming));
-    printf("------------------hipEventRecord1");
     HIP_VERIFY(hipEventRecord(event_, stream));
 }
 

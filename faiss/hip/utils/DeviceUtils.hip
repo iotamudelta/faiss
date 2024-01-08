@@ -128,7 +128,7 @@ int getDeviceForAddress(const void* p) {
     // memoryType is deprecated for CUDA 10.0+
 //#if CUDA_VERSION < 10000
     //TODO this enum is different for hip vs cuda, might need to adjust
-    if (att.memoryType == hipMemoryTypeHost) {
+    if (att.type == hipMemoryTypeHost) {
         return -1;
     } else {
         return att.device;

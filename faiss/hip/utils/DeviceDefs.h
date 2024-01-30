@@ -22,9 +22,7 @@ constexpr int kWarpSize = 64;
 
 // This is a memory barrier for intra-warp writes to shared memory.
 __forceinline__ __device__ void warpFence() {
-    // For the time being, assume synchronicity.
-    __threadfence_block();
-    //__syncthreads();
+    __builtin_amdgcn_wave_barrier();
 }
 
 #if CUDA_VERSION > 9000

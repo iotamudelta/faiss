@@ -317,7 +317,8 @@ endforeach()
 if (USE_ROCM)
 find_package(HIP REQUIRED)
 find_package(hipBLAS REQUIRED)
-target_link_libraries(faiss PRIVATE hip::host roc::hipblas)
+target_link_libraries(faiss_gpu PRIVATE hip::host roc::hipblas)
+target_compile_options(faiss_gpu PRIVATE)
 else()
 # Prepares a host linker script and enables host linker to support
 # very large device object files.

@@ -23,12 +23,12 @@ struct GetCudaType;
 #ifdef USE_ROCM
 template <>
 struct GetCudaType<float> {
-    static constexpr hipblasDataType_t Type = HIPBLAS_R_32F;
+    static constexpr hipblasDatatype_t Type = HIPBLAS_R_32F;
 };
 
 template <>
 struct GetCudaType<half> {
-    static constexpr hipblasDataType_t Type = HIPBLAS_R_16F;
+    static constexpr hipblasDatatype_t Type = HIPBLAS_R_16F;
 };
 #else
 template <>

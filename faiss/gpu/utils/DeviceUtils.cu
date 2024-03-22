@@ -124,6 +124,13 @@ int getDeviceForAddress(const void* p) {
         return -1;
     }
 
+#if USE_ROCM
+    if (att.type != hipMemoryTypeHost && att.type != hipMemoryTypeUnregistered) {
+        return att.device;
+    } else {
+        return -1;
+    }
+#else
     // memoryType is deprecated for CUDA 10.0+
 #if CUDA_VERSION < 10000
     if (att.memoryType == cudaMemoryTypeHost) {
@@ -139,6 +146,7 @@ int getDeviceForAddress(const void* p) {
         return -1;
     }
 #endif
+#else
 }
 
 bool getFullUnifiedMemSupport(int device) {

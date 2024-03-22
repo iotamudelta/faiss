@@ -203,6 +203,10 @@ function(generate_ivf_interleaved_code)
     set(CU_OR_HIP "cu")
   endif()
 
+  if (USE_ROCM)
+     list(TRANSFORM FAISS_GPU_SRC REPLACE cu$ hip)
+  endif()
+
   # Traverse through the Cartesian product of X and Y
   foreach(sub_codec ${SUB_CODEC_TYPE})
   foreach(metric_type ${SUB_METRIC_TYPE})

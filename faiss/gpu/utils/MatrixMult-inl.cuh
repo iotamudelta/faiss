@@ -162,6 +162,32 @@ cublasStatus_t rawBatchGemm(
     auto cBT = GetCudaType<BT>::Type;
 
     // Always accumulate in f32
+#ifdef USE_ROCM
+    return hipblasGemmStridedBatchedEx(
+            handle,
+            transa,
+            transb,
+            m,
+            n,
+            k,
+            &fAlpha,
+            A,
+            cAT,
+            lda,
+            strideA, 
+            B,
+            cBT,
+            ldb,
+            strideB,
+            &fBeta,
+            C,
+            HIPBLAS_R_32F,
+            ldc,
+            strideC,
+            batchCount,
+            HIPBLAS_R_32F,
+            HIPBLAS_GEMM_DEFAULT);
+#else
     return cublasGemmStridedBatchedEx(
             handle,
             transa,
@@ -186,6 +212,7 @@ cublasStatus_t rawBatchGemm(
             batchCount,
             CUDA_R_32F,
             CUBLAS_GEMM_DEFAULT);
+#endif
 }
 
 template <typename AT, typename BT>

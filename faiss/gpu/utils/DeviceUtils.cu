@@ -146,7 +146,7 @@ int getDeviceForAddress(const void* p) {
         return -1;
     }
 #endif
-#else
+#endif
 }
 
 bool getFullUnifiedMemSupport(int device) {

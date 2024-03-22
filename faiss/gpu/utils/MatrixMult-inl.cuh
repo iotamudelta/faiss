@@ -20,6 +20,17 @@ namespace gpu {
 template <typename T>
 struct GetCudaType;
 
+#ifdef USE_ROCM
+template <>
+struct GetCudaType<float> {
+    static constexpr hipblasDataType_t Type = HIPBLAS_R_32F;
+};
+
+template <>
+struct GetCudaType<half> {
+    static constexpr hipblasDataType_t Type = HIPBLAS_R_16F;
+};
+#else
 template <>
 struct GetCudaType<float> {
     static constexpr cudaDataType_t Type = CUDA_R_32F;
@@ -29,6 +40,7 @@ template <>
 struct GetCudaType<half> {
     static constexpr cudaDataType_t Type = CUDA_R_16F;
 };
+#endif
 
 template <typename AT, typename BT>
 cublasStatus_t rawGemm(

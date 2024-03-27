@@ -27,24 +27,14 @@ namespace gpu {
         OUT = getBitfield((uint64_t)VAL, POS, LEN); \
     } while (0)
 
-// Taken from
-// https://github.com/GPUOpen-ProfessionalCompute-Libraries/MIVisionX/blob/rocm-5.5.0/amd_openvx/openvx/ago/ago_util_opencl.cpp#L1563
 __device__ __forceinline__ uint32_t
 getBitfield(uint32_t val, int pos, int len) {
-    if (len == 0)
-        return 0;
-    if (pos + len < 32)
-        return (val << (32 - pos - len)) >> (32 - len);
-    return val >> pos;
+    return __bitextract_u32(val, pos, len);
 }
 
 __device__ __forceinline__ uint64_t
 getBitfield(uint64_t val, int pos, int len) {
-    if (len == 0)
-        return 0;
-    if (pos + len < 64)
-        return (val << (64 - pos - len)) >> (64 - len);
-    return val >> pos;
+    return __bitextract_u64(val, pos, len);
 }
 
 __device__ __forceinline__ unsigned int setBitfield(

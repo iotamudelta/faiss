@@ -39,57 +39,30 @@ struct LoadStore {
 template <>
 struct LoadStore<Half4> {
     static inline __device__ Half4 load(void* p) {
-        Half4 ret;
-        // Direct memory copy
-        const uint16_t* in = reinterpret_cast<const uint16_t*>(p);
-        uint16_t* ou = reinterpret_cast<uint16_t*>(&ret);
-        ou[0] = in[0];
-        ou[1] = in[1];
-        ou[2] = in[2];
-        ou[3] = in[3];
-        return ret;
+        Half4 out;
+        Half4* t = reinterpret_cast<Half4*>(p);
+        out = *t;
+        return out;
     }
 
     static inline __device__ void store(void* p, Half4& v) {
-        // TODO
-        const uint16_t* in = reinterpret_cast<const uint16_t*>(&v);
-        uint16_t* ou = reinterpret_cast<uint16_t*>(p);
-        ou[0] = in[0];
-        ou[1] = in[1];
-        ou[2] = in[2];
-        ou[3] = in[3];
+        Half4* t = reinterpret_cast<Half4*>(p);
+        *t = v;
     }
 };
 
 template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
-        Half8 ret;
-        // Direct memory copy
-        const uint16_t* in = reinterpret_cast<const uint16_t*>(p);
-        uint16_t* ou = reinterpret_cast<uint16_t*>(&ret);
-        ou[0] = in[0];
-        ou[1] = in[1];
-        ou[2] = in[2];
-        ou[3] = in[3];
-        ou[4] = in[4];
-        ou[5] = in[5];
-        ou[6] = in[6];
-        ou[7] = in[7];
-        return ret;
+        Half8 out;
+	Half8* t = reinterpret_cast<Half8*>(p);
+        out = *t;
+        return out;
     }
 
     static inline __device__ void store(void* p, Half8& v) {
-        const uint16_t* in = reinterpret_cast<const uint16_t*>(&v);
-        uint16_t* ou = reinterpret_cast<uint16_t*>(p);
-        ou[0] = in[0];
-        ou[1] = in[1];
-        ou[2] = in[2];
-        ou[3] = in[3];
-        ou[4] = in[4];
-        ou[5] = in[5];
-        ou[6] = in[6];
-        ou[7] = in[7];
+        Half8* t = reinterpret_cast<Half8*>(p);
+        *t = v;
     }
 };
 

@@ -291,6 +291,7 @@ void IVFFlat::reconstruct_n(idx_t i0, idx_t ni, float* out) {
         return;
     }
 
+    int warpSize = getWarpSizeCurrentDevice();
     auto stream = resources_->getDefaultStreamCurrentDevice();
 
     for (idx_t list_no = 0; list_no < numLists_; list_no++) {
@@ -315,15 +316,15 @@ void IVFFlat::reconstruct_n(idx_t i0, idx_t ni, float* out) {
             // where vectors are chunked into groups of 32, and each dimension
             // for each of the 32 vectors is contiguous
 
-            auto vectorChunk = offset / 32;
-            auto vectorWithinChunk = offset % 32;
+            auto vectorChunk = offset / warpSize;
+            auto vectorWithinChunk = offset % warpSize;
 
             auto listDataPtr = (float*)deviceListData_[list_no]->data.data();
-            listDataPtr += vectorChunk * 32 * dim_ + vectorWithinChunk;
+            listDataPtr += vectorChunk * warpSize * dim_ + vectorWithinChunk;
 
             for (int d = 0; d < dim_; ++d) {
                 fromDevice<float>(
-                        listDataPtr + 32 * d,
+                        listDataPtr + warpSize * d,
                         out + (id - i0) * dim_ + d,
                         1,
                         stream);

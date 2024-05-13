@@ -55,7 +55,7 @@ template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
         Half8 out;
-	Half8* t = reinterpret_cast<Half8*>(p);
+        Half8* t = reinterpret_cast<Half8*>(p);
         out = *t;
         return out;
     }

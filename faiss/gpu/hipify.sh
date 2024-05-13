@@ -91,6 +91,28 @@ do
     fi
 done
 
+# Copy over other files
+for ext in py
+do
+    for src in $(find ./gpu -name "*.$ext")
+    do
+        dst=$(echo $src | sed 's@./gpu@./gpu-rocm@')
+        if test -f $dst
+        then
+            if diff -q $src $dst >& /dev/null
+            then
+                echo "$dst [unchanged]"
+            else
+                echo "$dst"
+                cp $src $dst
+            fi
+        else
+            echo "$dst"
+            cp $src $dst
+        fi
+    done
+done
+
 # run hipify-perl against python/swigfaiss.swig
 # replace header include statements "<faiss/gpu/" with "<faiss/gpu-rocm" in python
 for src in ./python/swigfaiss.swig

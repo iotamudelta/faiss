@@ -81,6 +81,15 @@ add_subdirectory(faiss)
 
 if(FAISS_ENABLE_GPU)
   if(USE_ROCM)
+    # python and c_api not yet supported with ROCM
+    if(FAISS_ENABLE_PYTHON)
+      message(FATAL_ERROR "Python front-end is currently unsupported with ROCM")
+    endif()
+
+    if(FAISS_ENABLE_C_API)
+      message(FATAL_ERROR "c_api is currently unsupported with ROCM")
+    endif()
+
     add_subdirectory(faiss/gpu-rocm)
   else()
     add_subdirectory(faiss/gpu)
